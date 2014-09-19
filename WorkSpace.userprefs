@@ -1,8 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GridManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\GridManager.cs" Line="90" Column="9" />
+      <File FileName="Assets\Scripts\GridManager.cs" Line="78" Column="38" />
+      <File FileName="Assets\Scripts\PuzzleManager.cs" Line="13" Column="30" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
