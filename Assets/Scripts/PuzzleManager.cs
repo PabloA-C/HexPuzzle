@@ -9,7 +9,7 @@ public class PuzzleManager : MonoBehaviour
 		void Start ()
 		{
 				gridManager = GetComponent<GridManager> ();
-				gridManager.createGrid ();
+				
 				gridManager.drawTiles ();
 
 				

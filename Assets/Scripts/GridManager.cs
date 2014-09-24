@@ -7,8 +7,8 @@ public class GridManager: MonoBehaviour
 
 		private float tileWidth;
 		private float tileHeight;
-		private int numTilesX = 8;
-		private int numTilesY = 7;
+		private int numTilesX = 7;
+		private int numTilesY = 5;
 		public List<TileScript> tileArray;
 
 		//The grid should be generated on game start
@@ -18,11 +18,9 @@ public class GridManager: MonoBehaviour
 				
 				tileWidth = auxPrefab.renderer.bounds.size.x;
 				tileHeight = auxPrefab.renderer.bounds.size.y;
-
 				Destroy (auxPrefab);
-
 				tileArray = new System.Collections.Generic.List<TileScript> ();
-
+				createGrid ();
 	
 		}
 
@@ -96,7 +94,7 @@ public class GridManager: MonoBehaviour
 		
 		
 		
-				float gridOffsetX = -((numTilesX + 1) / 2) * tileWidth;
+				float gridOffsetX = -((numTilesX - 1) / 2) * tileWidth - tileWidth / 2;
 				float gridOffsetY = -((numTilesY / 2) * tileHeight) + (oddRowsCount * tileHeight * 0.25f);
 		
 				tileGrid.transform.position = new Vector3 (gridOffsetX, gridOffsetY, 0);
