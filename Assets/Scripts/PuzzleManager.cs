@@ -8,9 +8,12 @@ public class PuzzleManager : MonoBehaviour
 		// Use this for initialization
 		void Start ()
 		{
-				gridManager = GetComponent<GridManager> ();
 				
-				gridManager.drawTiles ();
+				MapCreator map = new MapCreator (1);
+				map.run ();
+
+				//		gridManager = GetComponent<GridManager> ();
+				//		gridManager.drawTiles ();
 
 				
 		}

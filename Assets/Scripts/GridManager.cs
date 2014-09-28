@@ -9,17 +9,17 @@ public class GridManager: MonoBehaviour
 		private float tileHeight;
 		private int numTilesX = 7;
 		private int numTilesY = 5;
-		public List<TileScript> tileArray;
+		public List<TileScript> allTilesArray;
+		public List<Coordinate> placedTiles;
 
 		//The grid should be generated on game start
 		void Start ()
 		{
 				GameObject auxPrefab = Instantiate (Resources.Load ("Grass")) as GameObject;
-				
 				tileWidth = auxPrefab.renderer.bounds.size.x;
 				tileHeight = auxPrefab.renderer.bounds.size.y;
 				Destroy (auxPrefab);
-				tileArray = new System.Collections.Generic.List<TileScript> ();
+				allTilesArray = new System.Collections.Generic.List<TileScript> ();
 				createGrid ();
 	
 		}
@@ -36,13 +36,8 @@ public class GridManager: MonoBehaviour
 			
 						for (int x = 0; x<numTilesX+extraTile; x++) {
 			
-								TileScript tile = new TileScript ();
-								tile.setCoordinates (x, y);
-								tile.setType ("Grass");
-								tileArray.Add (tile);
-								print ("Created " + tile.getName ());
+								TileScript tile = new TileScript ("Straight", "Tile " + x + y, new Coordinate (x, y), 0);
 								
-	
 						}
 						
 				}
@@ -61,12 +56,12 @@ public class GridManager: MonoBehaviour
 				bool alreadyCounts = true;
 				float oddRowOffset = 0;
 		
-				foreach (TileScript tile in tileArray) {
+				foreach (TileScript tile in allTilesArray) {
 			
 						print ("Iterating: " + tile.getName ());
 			
-						int x = tile.getX ();
-						int y = tile.getY ();
+						int x = tile.getCoordinates ().getX ();
+						int y = tile.getCoordinates ().getY ();
 						string type = tile.getType ();
 						string name = tile.getName ();
 			
@@ -101,6 +96,8 @@ public class GridManager: MonoBehaviour
 		}
 	
 
-
-
+		
+		
+		
+		
 }

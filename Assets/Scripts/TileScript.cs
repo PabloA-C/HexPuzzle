@@ -1,64 +1,77 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TileScript
 {
 		private string type, name;
-		private int x, y;
-		private int exit1, exit2;
-
+		private Coordinate coordinates;
+		private int rotation;
+		private int exit1 = 0;
+		private int exit2 = 0;
+		
 		// Use this for initialization
 		void Start ()
 		{
-				
+			
 		}
 
-		bool canBePlaced (int currentTileExit)
-		{
-				bool res = false;
-				int desiredInput;
-
-				if (currentTileExit < 4) {
-						desiredInput = currentTileExit + 3;
-				} else {
-						desiredInput = currentTileExit - 3;
-				}
-
-				if (exit1 == desiredInput || exit2 == desiredInput) {
-						res = true;
-				}
-				return res;
-		}
-
-	
-		public void setCoordinates (int x, int y)
-		{
-				this.x = x;
-				this.y = y;
-				this.name = "Tile " + x + y;
-		}
-
-		public void setType (string type)
+		public TileScript (string type, string name, Coordinate coordinate, int rotation)
 		{
 				this.type = type;
+				this.name = name;
+				this.coordinates = coordinate;
+				this.rotation = rotation;
+	
+				int mod = 1;
+				if (exit1 > 3) {
+						mod = -1;
+				}
+
+				switch (type) {
+				
+				case "Straight":
+						exit1 = 1 + rotation;
+						exit2 = mod * 3;
+						break;
+				case "Turn":
+						exit1 = 1 + rotation;
+						exit2 = mod * 2;
+						break;
+
+				case "SharpTurn":
+						exit1 = 1 + rotation;
+						exit2 = mod;
+						break;
+				}
+		
 		}
 
-		public 	int getX ()
+		public List<int> getExits ()
 		{
-				return x;
+				List<int> exits = new System.Collections.Generic.List<int> ();
+				
+				exits.Add (exit1);
+				exits.Add (exit2);
+				return exits;
+			
+		
 		}
 
-		public int getY ()
+		public Coordinate getCoordinates ()
 		{
-				return y;
+				return coordinates;
 		}
-
+		
+		public int getRotation ()
+		{
+				return rotation;
+		}
 
 		public string getName ()
 		{
 				return name;
 		}
-
 
 		public string getType ()
 		{
