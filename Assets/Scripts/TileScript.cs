@@ -6,55 +6,45 @@ public class TileScript
 {
 		private string type, name;
 		private Coordinate coordinates;
+	
 		private int rotation;
-		private int exit1 = 0;
-		private int exit2 = 0;
-		
+		private int exit1;
+		private int exit2;
+
 		// Use this for initialization
-		void Start ()
+		void start ()
 		{
 			
 		}
 
 		public TileScript ()
 		{
+
 		}
-		
 
-		public TileScript (string type, string name, Coordinate coordinate, int rotation)
+		public TileScript (Coordinate coordinate, string type)
 		{
-				this.type = type;
-				this.name = name;
-				this.coordinates = coordinate;
-				this.rotation = rotation;
 
-				switch (type) {
 				
-				case "Straight":
-						exit1 = 1 + rotation;
-						exit2 = 4 + rotation;
-						break;
-				case "Turn":
-						exit1 = 1 + rotation;
-						exit2 = 3 + rotation;
-						break;
+				this.type = type;
+				this.name = type + " tile";
 
-				case "SharpTurn":
-						exit1 = 1 + rotation;
-						exit2 = 3 + rotation;
-						break;
+				if (type == "Grass")
+						;
+				{
+						this.name = "Empty Tile";
 				}
+			
+				this.coordinates = coordinate;
+				this.exit1 = 0;
+				this.exit2 = 0;
 		
 		}
 
-		public void TileScriptFromPosition (string type, string name, Coordinate coordinate, int prevExitPosition, int leftOrRight)
+		public TileScript (string type, string name, Coordinate coordinate, int prevExitPosition, int leftOrRight)
 		{
 				this.type = type;
 				this.name = name;
-				this.coordinates = coordinate;
-				this.rotation = rotation;
-
-				
 					
 				if (prevExitPosition > 3) {
 						exit1 = prevExitPosition - 3;
@@ -113,10 +103,9 @@ public class TileScript
 						}
 						break;
 				}
-		
+
+				rotation = exit1 - 1;
 		}
-
-
 
 		public List<int> getExits ()
 		{

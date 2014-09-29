@@ -36,7 +36,7 @@ public class GridManager: MonoBehaviour
 			
 						for (int x = 0; x<numTilesX+extraTile; x++) {
 			
-								TileScript tile = new TileScript ("Straight", "Tile " + x + y, new Coordinate (x, y), 0);
+								TileScript tile = new TileScript (new Coordinate (x, y), "Grass");
 								
 						}
 						

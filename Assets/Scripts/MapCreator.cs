@@ -95,7 +95,7 @@ public class MapCreator
 								
 								if (newPath.Count == pathLenght + 1) {
 										//If we only have one tile to go, we add the Finish tile.
-										TileScript finish = new TileScript ("Finish", "Finish Tille", nextIterationCoordinate, 0);
+										TileScript finish = new TileScript (nextIterationCoordinate, "Finish");
 					
 								} else {
 										//We have more than one iteration to go. 
@@ -136,18 +136,18 @@ public class MapCreator
 												Debug.Log ("RandomVal: " + randomVal + " - Value: " + chosen);
 						
 						
-												/*
+												
 												if (chosen == 1) {	
-
-														Debug.Log ("it was one");
-														TileScript nextTile = new TileScript ();
-														nextTile.TileScriptFromPosition ("Straight", "Tile " + newPath.Count, nextCoordinate, prevExitPosition, 0);
+								
+														//In the Straight tile, we dont mind the left or right orientation.
+														TileScript nextTile = new TileScript ("Straight", "Tile " + newPath.Count, nextIterationCoordinate, prevExitPosition, 0);
 														
-														Debug.Log ("Straight Chose a " + nextTile.getType () + " " + nextTile.getExits () [0] + " " + nextTile.getExits () [1]);
+														Debug.Log ("Created a " + nextTile.getType () + " tile with exits: " + nextTile.getExits () [0] + " and " + nextTile.getExits () [1]);
 														pathFound = true;
 
 												}
 
+												/*
 												
 												if (chosen == 2) {	
 												Debug.Log ("it was two");
@@ -259,7 +259,7 @@ public class MapCreator
 				//TEST	Coordinate startTileCoordinate = new Coordinate (startX, startY);
 				Coordinate startTileCoordinate = new Coordinate (6, 1);
 
-				TileScript res = new TileScript ("Start", "StartTile", startTileCoordinate, 0);
+				TileScript res = new TileScript (startTileCoordinate, "Start");
 				return res;
 		
 		}
@@ -348,8 +348,6 @@ public class MapCreator
 				int extra = oneIfEven (coordinate.getY ());
 
 
-				
-		
 		
 				if (coordinate.getY () < floorY || coordinate.getY () > ceilY || coordinate.getX () < floorX || coordinate.getX () > ceilX + extra) {
 						res = false;
@@ -378,6 +376,9 @@ public class MapCreator
 				return res;
 			
 		}
+
+		
+
 
 		public int oneIfEven (int row)
 		{
