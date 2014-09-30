@@ -9,8 +9,8 @@ public class GridManager: MonoBehaviour
 		private float tileHeight;
 		private int numTilesX = 7;
 		private int numTilesY = 5;
-		public List<TileScript> allTilesArray;
-		public List<Coordinate> placedTiles;
+		public List<TileScript> grid;
+		public List<Coordinate> usedCoordinates;
 
 		//The grid should be generated on game start
 		void Start ()
@@ -19,14 +19,30 @@ public class GridManager: MonoBehaviour
 				tileWidth = auxPrefab.renderer.bounds.size.x;
 				tileHeight = auxPrefab.renderer.bounds.size.y;
 				Destroy (auxPrefab);
-				allTilesArray = new System.Collections.Generic.List<TileScript> ();
-				createGrid ();
+				grid = new System.Collections.Generic.List<TileScript> ();
+				
 	
 		}
 
-		public void createGrid ()
+		public void createGrid (int difficulty, List<TileScript> map)
 		{
-			
+
+				switch (difficulty) {
+				case 1:
+						numTilesX = 7;
+						numTilesY = 5;
+						break;
+				case 2:
+						numTilesX = 11;
+						numTilesY = 9;
+						break;
+				case 3:
+						numTilesX = 15;
+						numTilesY = 13;
+						break;
+				}
+
+
 				for (int y = 0; y<numTilesY; y++) {
 						int extraTile = 1;
 						if (y % 2 != 0) {
@@ -36,13 +52,28 @@ public class GridManager: MonoBehaviour
 			
 						for (int x = 0; x<numTilesX+extraTile; x++) {
 			
-								TileScript tile = new TileScript (new Coordinate (x, y), "Grass");
+								bool isMapTile = false;
+								foreach (TileScript mapTile in map) {
+								
+										if (mapTile.getCoordinates ().getX () == x && mapTile.getCoordinates ().getY () == y) {
+												grid.Add (mapTile);
+												isMapTile = true;
+										}
+
+								}
+
+								if (!isMapTile) {
+										TileScript tile = new TileScript (new Coordinate (x, y), "Grass");
+										grid.Add (tile);
+								}
 								
 						}
 						
 				}
 				
 		}
+
+		
 
 		public void drawTiles ()
 		{
@@ -56,7 +87,7 @@ public class GridManager: MonoBehaviour
 				bool alreadyCounts = true;
 				float oddRowOffset = 0;
 		
-				foreach (TileScript tile in allTilesArray) {
+				foreach (TileScript tile in grid) {
 			
 						print ("Iterating: " + tile.getName ());
 			
@@ -83,6 +114,7 @@ public class GridManager: MonoBehaviour
 						GameObject tileObject = Instantiate (Resources.Load (type)) as GameObject;
 						tileObject.name = name;
 						tileObject.transform.position = new Vector3 (tileWidth * x + oddRowOffset, tileHeight * y + gridVerticalOffset, 0);
+						tileObject.transform.Rotate (0, 0, tile.getRotation () * 60, Space.World);
 						tileObject.transform.parent = tileGrid.transform;
 			
 				}

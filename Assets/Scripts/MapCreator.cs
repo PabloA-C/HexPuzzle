@@ -24,6 +24,7 @@ public class MapCreator
 				//Setting the bounds of the grid.
 				setBounds (difficulty);
 				Debug.Log (floorX + ", " + ceilX + " | " + floorY + ", " + ceilY);
+				run ();
 		}
 		
 		public void run ()
@@ -36,13 +37,20 @@ public class MapCreator
 			
 				//Starting the backtracking algorithm.
 				Backtracking (startTile, path);
-	
+
+				
+				foreach (TileScript tile in completePath) {
+						Debug.Log (tile.getType ());
+			
+				}
 			
 		}
 
 		public void Backtracking (TileScript newTile, List<TileScript> currentPath)
 		{
-		
+
+				
+
 				//Adding the previous tiles to the new list of tiles.
 				List<TileScript> newPath = new System.Collections.Generic.List<TileScript> ();
 			
@@ -59,6 +67,14 @@ public class MapCreator
 						//we found the path!
 
 						pathFound = true;
+						
+						Debug.Log ("Solution found");
+					
+						completePath = new System.Collections.Generic.List<TileScript> ();
+
+						foreach (TileScript pathTile in newPath) {
+								completePath.Add (pathTile);
+						}
 
 				} else {
 						//If we didn't find the path yet, we go on.
@@ -84,10 +100,8 @@ public class MapCreator
 
 						//Now that we have the current tile's exit, we can use that information along the coordinate to obtain the
 						//coordinate the next tile would have.
+
 						Coordinate nextIterationCoordinate = getCoordinateFromExit (newTile.getCoordinates (), prevExitPosition);
-			
-						Debug.Log ("Current tile coordinate: " + newTile.getCoordinates ().getX () + ", " + newTile.getCoordinates ().getY () + ". Exit: " + prevExitPosition + ". Next Coordinate: " + nextIterationCoordinate.getX () + ", " + nextIterationCoordinate.getY ());
-						
 
 						if (isOnBounds (nextIterationCoordinate) && placeUnused (nextIterationCoordinate, newPath)) {
 								//Checking if the next coordinate is on bounds and it's not used already.
@@ -96,6 +110,7 @@ public class MapCreator
 								if (newPath.Count == pathLenght + 1) {
 										//If we only have one tile to go, we add the Finish tile.
 										TileScript finish = new TileScript (nextIterationCoordinate, "Finish");
+										Backtracking (finish, newPath);
 					
 								} else {
 										//We have more than one iteration to go. 
@@ -119,77 +134,74 @@ public class MapCreator
 												possibleTiles.Add (i);
 										}
 										
-										//************* AND NO PATH FOUND once its possible to find it
 										while (possibleTiles.Count>0&&!pathFound) {
 												//If there is still a type of tile to test on a slot.
 							
 												/*
 												 To improve the execution time, we check if a path was found on a previous 
-												attemp.
+												attemp. There is repeated code here. That's a bad smell, but i'll be fixed 
+												on further refactorizations.
 												*/
 
 												int randomVal = (int)Mathf.Floor (Random.Range (0, possibleTiles.Count));
 												int chosen = possibleTiles [randomVal];
 												possibleTiles.RemoveAt (randomVal);
-						
-						
-												Debug.Log ("RandomVal: " + randomVal + " - Value: " + chosen);
-						
-						
-												
+
 												if (chosen == 1) {	
 								
 														//In the Straight tile, we dont mind the left or right orientation.
 														TileScript nextTile = new TileScript ("Straight", "Tile " + newPath.Count, nextIterationCoordinate, prevExitPosition, 0);
 														
+														
 														Debug.Log ("Created a " + nextTile.getType () + " tile with exits: " + nextTile.getExits () [0] + " and " + nextTile.getExits () [1]);
-														pathFound = true;
+														Backtracking (nextTile, newPath);
 
 												}
 
-												/*
+
 												
 												if (chosen == 2) {	
-												Debug.Log ("it was two");
-												List<int> possibleTurns = new System.Collections.Generic.List<int> ();
-												possibleTiles.Add (1);
-												possibleTiles.Add (2);
+					
+														
+														List<int> possibleTurns = new System.Collections.Generic.List<int> ();
+														possibleTurns.Add (0);
+														possibleTurns.Add (1);
 
-												while (possibleTurns.Count>0&&!pathFound) {
+														
+														while (possibleTurns.Count>0&&!pathFound) {
 
-														int randomTurn = (int)Mathf.Floor (Random.Range (0, possibleTurns.Count));
-														int leftOrRight = possibleTiles [randomVal];
-														possibleTurns.RemoveAt (randomVal);
+																int randomTurn = (int)Mathf.Floor (Random.Range (0, possibleTurns.Count));
+																int leftOrRight = possibleTurns [randomTurn];
+																possibleTurns.RemoveAt (randomTurn);
 
-														TileScript nextTile = new TileScript ();
-														nextTile.TileScriptFromPosition ("Turn", "Tile " + newPath.Count, nextCoordinate, prevExitPosition, leftOrRight);
-														Debug.Log ("Turn Chose a " + nextTile.getType () + " " + nextTile.getExits () [0] + " " + nextTile.getExits () [1]);
-														pathFound = true;
+																TileScript nextTile = new TileScript ("Turn", "Tile " + newPath.Count, nextIterationCoordinate, prevExitPosition, leftOrRight);
+																Debug.Log ("Created a " + nextTile.getType () + " tile with exits: " + nextTile.getExits () [0] + " and " + nextTile.getExits () [1]);
+																Backtracking (nextTile, newPath);
 														
 														}
 												}
 
-												 		if (chosen == 3) {	
-														Debug.Log ("it was three");
+												if (chosen == 3) {	
+						
+							
 														List<int> possibleTurns = new System.Collections.Generic.List<int> ();
-														possibleTiles.Add (1);
-														possibleTiles.Add (2);
+														possibleTurns.Add (0);
+														possibleTurns.Add (1);
+							
 							
 														while (possibleTurns.Count>0&&!pathFound) {
 								
 																int randomTurn = (int)Mathf.Floor (Random.Range (0, possibleTurns.Count));
-																int leftOrRight = possibleTiles [randomVal];
-																possibleTurns.RemoveAt (randomVal);
+																int leftOrRight = possibleTurns [randomTurn];
+																possibleTurns.RemoveAt (randomTurn);
 								
-																TileScript nextTile = new TileScript ();
-																nextTile.TileScriptFromPosition ("SharpTurn", "Tile " + newPath.Count, nextCoordinate, prevExitPosition, leftOrRight);
-																Debug.Log ("SharpTurn Chose a " + nextTile.getType () + " " + nextTile.getExits () [0] + " " + nextTile.getExits () [1]);
-																pathFound = true;
+																TileScript nextTile = new TileScript ("SharpTurn", "Tile " + newPath.Count, nextIterationCoordinate, prevExitPosition, leftOrRight);
+																Debug.Log ("Created a " + nextTile.getType () + " tile with exits: " + nextTile.getExits () [0] + " and " + nextTile.getExits () [1]);
+																Backtracking (nextTile, newPath);
 								
 														}
 												}
-												*/
-						
+												
 										}
 					
 					
@@ -213,6 +225,12 @@ public class MapCreator
 			
 
 		}
+
+		public List<TileScript> getMap ()
+		{
+				return completePath;
+		}
+
 
 		//Setting the bounding grid.
 		public void setBounds (int difficulty)
@@ -256,8 +274,7 @@ public class MapCreator
 				int startX = (int)Mathf.Floor (Random.Range (0, pathWidth + extra));	
 		
 		
-				//TEST	Coordinate startTileCoordinate = new Coordinate (startX, startY);
-				Coordinate startTileCoordinate = new Coordinate (6, 1);
+				Coordinate startTileCoordinate = new Coordinate (startX, startY);
 
 				TileScript res = new TileScript (startTileCoordinate, "Start");
 				return res;
@@ -300,7 +317,7 @@ public class MapCreator
 		//Get the coordinates of the next tile given the previous tile coordinates and it's exit.
 		public Coordinate getCoordinateFromExit (Coordinate currentCoordinate, int exit)
 		{
-
+				
 				Coordinate res = new Coordinate ();
 				int extra = oneIfEven (currentCoordinate.getY ());
 				
@@ -377,9 +394,6 @@ public class MapCreator
 			
 		}
 
-		
-
-
 		public int oneIfEven (int row)
 		{
 				int res = 0;
@@ -389,6 +403,8 @@ public class MapCreator
 				}
 				return res;
 		}
+
+		
 
 }
 				

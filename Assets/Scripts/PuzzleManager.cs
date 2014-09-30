@@ -3,17 +3,18 @@ using System.Collections;
 
 public class PuzzleManager : MonoBehaviour
 {
-		GridManager gridManager;
+		private GridManager gridManager;
+		private MapCreator mapCreator ;
+		public int difficulty = 1;
 
 		// Use this for initialization
 		void Start ()
 		{
 				
-				MapCreator map = new MapCreator (1);
-				map.run ();
-
-				//		gridManager = GetComponent<GridManager> ();
-				//		gridManager.drawTiles ();
+				mapCreator = new MapCreator (difficulty);
+				gridManager = GetComponent<GridManager> ();
+				gridManager.createGrid (difficulty, mapCreator.getMap ());
+				gridManager.drawTiles ();
 
 				
 		}

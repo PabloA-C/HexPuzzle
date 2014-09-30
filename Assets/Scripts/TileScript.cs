@@ -45,7 +45,12 @@ public class TileScript
 		{
 				this.type = type;
 				this.name = name;
-					
+				this.coordinates = coordinate;
+				rotation = 1;
+				this.exit1 = 0;
+				this.exit2 = 0;
+				
+
 				if (prevExitPosition > 3) {
 						exit1 = prevExitPosition - 3;
 				} else {
@@ -62,39 +67,46 @@ public class TileScript
 						} else {
 								exit2 = exit1 + 3;
 						}
-
+						rotation = exit1 - 1;
+							
 						break;
 				case "Turn":
 						
 						if (leftOrRight == 1) {
+								rotation = exit1 - 1;
 								if (exit1 > 4) {
 										exit2 = exit1 - 4;
 								} else {
 										exit2 = exit1 + 2;
 								}
+
+								
 								
 						} else {
-
+								rotation = exit1 - 3;
 								if (exit1 > 2) {
 										exit2 = exit1 - 2;
 								} else {
 										exit2 = exit1 + 4;
 								}
 						}
-
+						
 						break;
 			
 				case "SharpTurn":
 						
 						if (leftOrRight == 1) {
+								rotation = exit1 - 1;
 								if (exit1 > 5) {
 										exit2 = exit1 - 5;
 								} else {
 										exit2 = exit1 + 1;
 								}
 				
-						} else {
 				
+				
+						} else {
+								rotation = exit1 - 2;
 								if (exit1 > 1) {
 										exit2 = exit1 - 1;
 								} else {
@@ -103,8 +115,10 @@ public class TileScript
 						}
 						break;
 				}
-
-				rotation = exit1 - 1;
+		
+				
+				this.name = name + " - Rotation: " + rotation;
+				
 		}
 
 		public List<int> getExits ()
@@ -141,3 +155,43 @@ public class TileScript
 		
 
 }
+
+/*case "Turn":
+						
+						if (leftOrRight == 1) {
+								if (exit1 > 4) {
+										exit2 = exit1 - 4;
+								} else {
+										exit2 = exit1 + 2;
+								}
+								
+						} else {
+								if (exit1 > 2) {
+										exit2 = exit1 - 2;
+								} else {
+										exit2 = exit1 + 4;
+								}
+						}
+						
+						break;
+			
+				case "SharpTurn":
+						
+						if (leftOrRight == 1) {
+								if (exit1 > 5) {
+										exit2 = exit1 - 5;
+								} else {
+										exit2 = exit1 + 1;
+								}
+				
+						} else {
+								
+								if (exit1 > 1) {
+										exit2 = exit1 - 1;
+								} else {
+										exit2 = exit1 + 5;
+								}
+						}
+						break;
+
+ */
