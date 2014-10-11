@@ -5,7 +5,7 @@ public class PuzzleManager : MonoBehaviour
 {
 		private GridManager gridManager;
 		private MapCreator mapCreator ;
-		public int difficulty = 1;
+		public int difficulty = 3;
 
 		// Use this for initialization
 		void Start ()
@@ -13,7 +13,7 @@ public class PuzzleManager : MonoBehaviour
 				
 				mapCreator = new MapCreator (difficulty);
 				gridManager = GetComponent<GridManager> ();
-				gridManager.createGrid (difficulty, mapCreator.getMap ());
+				gridManager.createGrid (mapCreator);
 				gridManager.drawTiles ();
 
 				

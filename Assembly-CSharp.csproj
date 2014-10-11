@@ -46,11 +46,14 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Coordinate.cs" />
-     <Compile Include="Assets\Scripts\GridManager.cs" />
-     <Compile Include="Assets\Scripts\MapCreator.cs" />
+     <Compile Include="Assets\Scripts\Grid\Coordinate.cs" />
+     <Compile Include="Assets\Scripts\Grid\GridManager.cs" />
+     <Compile Include="Assets\Scripts\Grid\MapCreator.cs" />
      <Compile Include="Assets\Scripts\PuzzleManager.cs" />
-     <Compile Include="Assets\Scripts\TileScript.cs" />
+     <Compile Include="Assets\Scripts\Test\Test.cs" />
+     <Compile Include="Assets\Scripts\Tile\TilePrefabScript.cs" />
+     <Compile Include="Assets\Scripts\Tile\TileScript.cs" />
+     <Compile Include="Assets\Scripts\Tile\TileSelectorScript.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
