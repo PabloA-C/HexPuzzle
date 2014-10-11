@@ -10,7 +10,7 @@ public class Test : MonoBehaviour
 		
 				GameObject tileObject1 = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
 				tileObject1.transform.position = new Vector3 (-2, 0, 0);
-				tileObject1.GetComponent<TilePrefabScript> ().setTile ("Start");
+				tileObject1.GetComponent<TilePrefabScript> ().setTile ("Grass");
 				tileObject1.name = "Uno";
 				tileObject1.transform.transform.parent = GameObject.Find ("Test").transform;
 		
@@ -22,7 +22,7 @@ public class Test : MonoBehaviour
 
 				GameObject tileObject3 = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
 				tileObject3.transform.position = new Vector3 (2, 0, 0);
-				tileObject3.GetComponent<TilePrefabScript> ().setTile ("Finish");
+				tileObject3.GetComponent<TilePrefabScript> ().setTile ("Grass");
 				tileObject3.name = "Tres";
 				tileObject3.transform.transform.parent = GameObject.Find ("Test").transform;
 				

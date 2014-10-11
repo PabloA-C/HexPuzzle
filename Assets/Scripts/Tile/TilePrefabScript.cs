@@ -8,13 +8,14 @@ public class TilePrefabScript : MonoBehaviour
 		private string type;
 		private Vector3 position;
 		private int rotation;
-		private TilePrefabScript tilePrefabScript;
-		private GameObject resource;
-
+		private Sprite[] TileSprites;
+		private Sprite[] HLSprites;
+			
 		// Use this for initialization
 		void Start ()
 		{
-					
+				
+
 		}
 	
 		
@@ -22,45 +23,41 @@ public class TilePrefabScript : MonoBehaviour
 		void Update ()
 		{
 
-				if (Input.GetKeyDown ("space")) {
-						Destroy (resource);
-						resource = Instantiate (Resources.Load ("Grass")) as GameObject;	
-						resource.name = "Sprite";
-						resource.transform.position = transform.position;
-						resource.transform.Rotate (0, 0, 0, Space.World);
-						resource.transform.transform.parent = transform;
-
-
-				}
+				
 						
+		}
+	
+		void OnMouseOver ()
+		{
+				GetComponent<SpriteRenderer> ().sprite = TileSprites [0];
+		}
+
+
+		void OnMouseExit ()
+		{
+				drawOriginalTile ();
 		}
 
 		public void setTile (string type)
 		{
 
-				resource = Instantiate (Resources.Load (type)) as GameObject;	
-				resource.name = "Sprite";
-				resource.transform.position = transform.position;
-				resource.transform.Rotate (0, 0, 0, Space.World);
-				resource.transform.transform.parent = transform;
+				/*
+				 * Almacenar los datos, no solo el type.
+				*/
+
+				this.type = type;
+				TileSprites = Resources.LoadAll<Sprite> (@"Sprites/TileSheet");
+				HLSprites = Resources.LoadAll<Sprite> (@"Sprites/HighLights");
+				drawOriginalTile ();
+
 
 		}
+
+		public void  drawOriginalTile ()
+		{
+				
+				GetComponent<SpriteRenderer> ().sprite = TileSprites [3];
+				
+		}
+
 }
-/*
-
-
-	GameObject tileObject = Instantiate (Resources.Load (type)) as GameObject;
-	tileObject.name = name;
-	tileObject.transform.position = new Vector3 (tileWidth * x + oddRowOffset, tileHeight * y + gridVerticalOffset, 0);
-	tileObject.transform.Rotate (0, 0, tile.getRotation () * 60, Space.World);
-	tileObject.transform.parent = tileGrid.transform;
-
-resource = Instantiate (Resources.Load ("Grass")) as GameObject;
-				resource.name = name;
-				resource.transform.position = new Vector3 (0, 10, 0);
-				resource.transform.Rotate (0, 0, 0, Space.World);
-
-
-
-
- */
