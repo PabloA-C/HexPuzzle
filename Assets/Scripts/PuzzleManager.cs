@@ -14,7 +14,7 @@ public class PuzzleManager : MonoBehaviour
 				mapCreator = new MapCreator (difficulty);
 				gridManager = GetComponent<GridManager> ();
 				gridManager.createGrid (mapCreator);
-				gridManager.drawTiles ();
+				gridManager.createTiles ();
 
 				
 		}

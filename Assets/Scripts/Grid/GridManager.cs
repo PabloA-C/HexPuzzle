@@ -61,9 +61,7 @@ public class GridManager: MonoBehaviour
 				
 		}
 
-		
-
-		public void drawTiles ()
+		public void createTiles ()
 		{
 
 				GameObject tileGrid = new GameObject ("Grid");
@@ -72,43 +70,40 @@ public class GridManager: MonoBehaviour
 				float gridVerticalOffset = 0f;
 				int oddRowsCount = 1;
 		
-				bool alreadyCounts = true;
+				bool alreadyCounted = true;
 				float oddRowOffset = 0;
 		
 				foreach (TileScript tile in grid) {
-
-			
+						
 						int x = tile.getCoordinates ().getX ();
 						int y = tile.getCoordinates ().getY ();
-						string type = tile.getType ();
-						string name = tile.getName ();
 			
-			
-						if (!alreadyCounts && y % 2 != 0) {
-								alreadyCounts = true;
+						if (!alreadyCounted && y % 2 != 0) {
+								alreadyCounted = true;
 								oddRowOffset = tileWidth / 2;
 								oddRowsCount++;
 								gridVerticalOffset -= tileHeight * 0.25f;
 						}
 			
-						if (alreadyCounts && y % 2 == 0) {
+						if (alreadyCounted && y % 2 == 0) {
 								oddRowOffset = 0;
-								alreadyCounts = false;
+								alreadyCounted = false;
 								gridVerticalOffset -= tileHeight * 0.25f;
 				
 						}
 			
-						GameObject tileObject = Instantiate (Resources.Load (type)) as GameObject;
+						GameObject tilePrefab = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
 			
 						
-						tileObject.name = name;
-						tileObject.transform.position = new Vector3 (tileWidth * x + oddRowOffset, tileHeight * y + gridVerticalOffset, 0);
-						tileObject.transform.Rotate (0, 0, tile.getRotation () * 60, Space.World);
-						tileObject.transform.parent = tileGrid.transform;
+						tilePrefab.name = tile.getName ();
+						tilePrefab.transform.position = new Vector3 (tileWidth * x + oddRowOffset, tileHeight * y + gridVerticalOffset, 0);
+						tilePrefab.GetComponent<TilePrefabScript> ().setTile (tile);
+						tilePrefab.transform.parent = tileGrid.transform;
 
 					
 						
-			
+						
+						
 				}
 		
 		
@@ -118,10 +113,7 @@ public class GridManager: MonoBehaviour
 		
 				tileGrid.transform.position = new Vector3 (gridOffsetX, gridOffsetY, 0);
 		}
-	
 
-		
-		
-		
+
 		
 }

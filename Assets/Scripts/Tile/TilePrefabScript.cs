@@ -4,10 +4,8 @@ using System.Collections;
 public class TilePrefabScript : MonoBehaviour
 {
 
-		private string name;
-		private string type;
+		private TileScript tile;
 		private Vector3 position;
-		private int rotation;
 		private Sprite[] TileSprites;
 		private Sprite[] HLSprites;
 			
@@ -32,32 +30,57 @@ public class TilePrefabScript : MonoBehaviour
 				GetComponent<SpriteRenderer> ().sprite = TileSprites [0];
 		}
 
-
 		void OnMouseExit ()
 		{
-				drawOriginalTile ();
+				drawOriginalTile (tile.getType ());
 		}
 
-		public void setTile (string type)
+		public void setTile (TileScript tile)
 		{
 
-				/*
-				 * Almacenar los datos, no solo el type.
-				*/
-
-				this.type = type;
+				this.tile = tile;
 				TileSprites = Resources.LoadAll<Sprite> (@"Sprites/TileSheet");
 				HLSprites = Resources.LoadAll<Sprite> (@"Sprites/HighLights");
-				drawOriginalTile ();
+
+				drawOriginalTile (tile.getType ());
+				GetComponent<Transform> ().Rotate (0, 0, tile.getRotation () * 60, Space.World);
 
 
 		}
 
-		public void  drawOriginalTile ()
+		public void  drawOriginalTile (string type)
 		{
+				int index = getTypeIndex (type);
+				GetComponent<SpriteRenderer> ().sprite = TileSprites [index];
 				
-				GetComponent<SpriteRenderer> ().sprite = TileSprites [3];
 				
 		}
 
+		public int getTypeIndex (string type)
+		{
+				int res = 0;
+				switch (type) {
+				case "Water":
+						res = 1;
+						break;
+				case "Straight":
+						res = 2;
+						break;
+				case "Turn":
+						res = 3;
+						break;
+				case "SharpTurn":
+						res = 4;
+						break;
+				case "Start":
+						res = 5;
+						break;
+				case "Finish":
+						res = 6;
+						break;
+			
+				}
+				return res;
+			
+		}
 }

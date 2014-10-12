@@ -2,8 +2,9 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Tile\TilePrefabScript.cs">
     <Files>
-      <File FileName="Assets\Scripts\Tile\TilePrefabScript.cs" Line="38" Column="25" />
-      <File FileName="Assets\Scripts\Test\Test.cs" Line="19" Column="69" />
+      <File FileName="Assets\Scripts\Tile\TilePrefabScript.cs" Line="30" Column="22" />
+      <File FileName="Assets\Scripts\Test\Test.cs" Line="15" Column="18" />
+      <File FileName="Assets\Scripts\Tile\TileScript.cs" Line="20" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

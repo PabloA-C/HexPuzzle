@@ -6,8 +6,7 @@ public class TileScript
 {
 		private string type, name;
 		private Coordinate coordinates;
-	
-		private int rotation;
+		public int rotation;
 		private int exit1;
 		private int exit2;
 
@@ -29,12 +28,6 @@ public class TileScript
 				this.type = type;
 				this.name = type + " tile";
 
-				if (type == "Grass")
-						;
-				{
-						this.name = "Empty Tile";
-				}
-			
 				this.coordinates = coordinate;
 				this.exit1 = 0;
 				this.exit2 = 0;
