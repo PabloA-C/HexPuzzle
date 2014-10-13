@@ -6,9 +6,10 @@ public class TileScript
 {
 		private string type, name;
 		private Coordinate coordinates;
-		public int rotation;
+		private int rotation;
 		private int exit1;
 		private int exit2;
+		private bool isFixed;
 
 		// Use this for initialization
 		void start ()
@@ -146,7 +147,16 @@ public class TileScript
 				return type;
 		}
 		
+		public void setFixed (bool isFixed)
+		{
+				this.isFixed = isFixed;
 
+		}
+
+		public bool getIsFixed ()
+		{
+				return isFixed;
+		}
 }
 
 /*case "Turn":

@@ -46,9 +46,9 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Grid\Coordinate.cs" />
-     <Compile Include="Assets\Scripts\Grid\GridManager.cs" />
-     <Compile Include="Assets\Scripts\Grid\MapCreator.cs" />
+     <Compile Include="Assets\Scripts\Map\Coordinate.cs" />
+     <Compile Include="Assets\Scripts\Map\GridManager.cs" />
+     <Compile Include="Assets\Scripts\Map\MapCreator.cs" />
      <Compile Include="Assets\Scripts\PuzzleManager.cs" />
      <Compile Include="Assets\Scripts\Test\Test.cs" />
      <Compile Include="Assets\Scripts\Tile\TilePrefabScript.cs" />

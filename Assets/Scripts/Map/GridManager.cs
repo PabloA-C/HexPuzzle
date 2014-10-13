@@ -16,7 +16,7 @@ public class GridManager: MonoBehaviour
 		void Start ()
 		{
 				
-				GameObject auxPrefab = Instantiate (Resources.Load ("Grass")) as GameObject;
+				GameObject auxPrefab = Instantiate (Resources.Load ("Template")) as GameObject;
 				tileWidth = auxPrefab.renderer.bounds.size.x;
 				tileHeight = auxPrefab.renderer.bounds.size.y;
 				Destroy (auxPrefab);
@@ -40,25 +40,40 @@ public class GridManager: MonoBehaviour
 			
 						for (int x = 0; x<numTilesX+extraTile; x++) {
 			
-								bool isMapTile = false;
+								bool isUsed = false;
 								foreach (TileScript mapTile in map.getMap()) {
 								
 										if (mapTile.getCoordinates ().getX () == x && mapTile.getCoordinates ().getY () == y) {
 												grid.Add (mapTile);
-												isMapTile = true;
+												isUsed = true;
 										}
 
 								}
 
-								if (!isMapTile) {
+								if (!isUsed) {
+										
+										foreach (Coordinate waterCoord in map.getWaterCoordinates()) {
+												if (waterCoord.getX () == x && waterCoord.getY () == y) {
+													
+														TileScript waterTile = new TileScript (new Coordinate (x, y), "Water");
+														grid.Add (waterTile);
+														isUsed = true;
+												}
+						
+										}
+
+										
+								}
+								
+								if (!isUsed) {
 										TileScript tile = new TileScript (new Coordinate (x, y), "Grass");
 										grid.Add (tile);
 								}
-								
-						}
-						
-				}
 				
+						}
+			
+				}
+		
 		}
 
 		public void createTiles ()

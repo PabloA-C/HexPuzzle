@@ -12,7 +12,7 @@ public class Test : MonoBehaviour
 				TileScript dos = new TileScript (new Coordinate (1, 0), "Turn");
 				TileScript tres = new TileScript (new Coordinate (2, 0), "Finish");
 
-				dos.rotation = 1;
+
 
 				GameObject tileObject1 = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
 				tileObject1.transform.position = new Vector3 (-2, 0, 0);

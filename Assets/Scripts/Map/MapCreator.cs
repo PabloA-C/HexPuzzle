@@ -6,9 +6,11 @@ public class MapCreator
 {
 		
 		private List<TileScript> completePath;
+		private List<Coordinate> waterCoordinates;
 		private int pathWidth, pathHeight, pathLenght;
 		public int floorY, ceilY, floorX, ceilX;
 		private bool pathFound = false;
+		public float waterPercentage = 0.25f;
 		//************* Water 12%;
 		//************* Placed tiles 16% ;
 		
@@ -23,7 +25,6 @@ public class MapCreator
 		{
 				//Setting the bounds of the grid.
 				setBounds (difficulty);
-				Debug.Log (floorX + ", " + ceilX + " | " + floorY + ", " + ceilY);
 				run ();
 		}
 		
@@ -38,7 +39,9 @@ public class MapCreator
 				//Starting the backtracking algorithm.
 				Backtracking (startTile, path);
 
-				
+				//Placing water tiles
+
+				placeWater ();
 
 			
 			
@@ -222,6 +225,11 @@ public class MapCreator
 				return completePath;
 		}
 
+		public List<Coordinate> getWaterCoordinates ()
+		{
+				return waterCoordinates;
+		}
+
 
 
 		//Setting the bounding grid.
@@ -395,68 +403,57 @@ public class MapCreator
 				return res;
 		}
 
-		
-
-}
-				
-/*	
-
-		public List<Coordinate> getNeighboursCoordinates (Coordinate coordinate)
+		public void placeWater ()
 		{
-				List<Coordinate> res = new System.Collections.Generic.List<Coordinate> ();
+			
+				waterCoordinates = new System.Collections.Generic.List<Coordinate> ();
+				List<Coordinate> freeCoordinates = getFreeCoordinates ();
 
-				res.Add (new Coordinate (coordinate.getX (), coordinate.getY () - 1));
-				res.Add (new Coordinate (coordinate.getX () + 1, coordinate.getY () - 1));
-				res.Add (new Coordinate (coordinate.getX () - 1, coordinate.getY ()));
-				res.Add (new Coordinate (coordinate.getX () + 1, coordinate.getY ()));
-				res.Add (new Coordinate (coordinate.getX (), coordinate.getY () + 1));
-				res.Add (new Coordinate (coordinate.getX () + 1, coordinate.getY () + 1));
-
-
-				return res;
+				int numWaterTiles = (int)Mathf.Floor (freeCoordinates.Count * waterPercentage);
+			
+				while (waterCoordinates.Count<numWaterTiles) {
+						int randomVal = (int)Mathf.Floor (Random.Range (0, freeCoordinates.Count));
+						waterCoordinates.Add (freeCoordinates [randomVal]);
+						freeCoordinates.RemoveAt (randomVal);	
+						
+				}
 		}
+		
+		public List<Coordinate> getFreeCoordinates ()
+		{
+				
 
+				List<Coordinate> freeCoordinates = new System.Collections.Generic.List<Coordinate> ();
 
-
-			int rand = (int)Mathf.Floor (Random.Range (0, 7));
-				GameObject tile = null;
-				switch (rand) {
-				case 0:
-						tile = Instantiate (Resources.Load ("Grass")) as GameObject;
-						break;
-				case 1:
-						tile = Instantiate (Resources.Load ("Start")) as GameObject;
-						break;
-				case 2:
-						tile = Instantiate (Resources.Load ("Finish")) as GameObject;
-						break;
-				case 3:
-						tile = Instantiate (Resources.Load ("Straight")) as GameObject;
-						break;
-				case 4:
-						tile = Instantiate (Resources.Load ("Turn")) as GameObject;
-						break;
-				case 5:
-						tile = Instantiate (Resources.Load ("SharpTurn")) as GameObject;
-						break;
-				case 6:
-						tile = Instantiate (Resources.Load ("Water")) as GameObject;
-						break;
+				int numTilesX = ceilX - floorX + 1;
+				int numTilesY = ceilY - floorY + 1;
+		
+				for (int y = 0; y<numTilesY; y++) {
+						int extraTile = 1;
+						if (y % 2 != 0) {
+								extraTile = 0;
+				
+						}
 			
-			
+						for (int x = 0; x<numTilesX+extraTile; x++) {
+						
+								bool unused = true;
+								foreach (TileScript tile in completePath) {
+
+										if (tile.getCoordinates ().getX () == x && tile.getCoordinates ().getY () == y) {
+												unused = false;
+										}
+								}
+								if (unused) {
+										Coordinate newCoord = new Coordinate (x, y);
+										freeCoordinates.Add (newCoord);
+								}
+						}
+
 				}
 
-				int rand2 = (int)Mathf.Floor (Random.Range (1, 7));
+				
 		
-				if (rand != 1 && rand != 2) {
-						tile.transform.Rotate (0, 0, rand2 * 60, Space.World);
-				}
-			*/
-
-		
-		
-	
-
-	
-
-
+				return freeCoordinates;
+		}
+}
