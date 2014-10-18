@@ -16,7 +16,7 @@ public class PuzzleManager : MonoBehaviour
 				gridManager.createGrid (mapCreator);
 				gridManager.createTiles ();
 				gridManager = GetComponent<GridManager> ();
-				GameObject.Find ("Hand").GetComponent<HandPrefabScript> ().setHand (mapCreator.getHand ());
+				GameObject.Find ("Hand").GetComponent<HandPrefabScript> ().setHand (mapCreator.getHand (), difficulty);
 		
 		}
 	

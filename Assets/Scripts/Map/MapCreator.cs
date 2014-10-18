@@ -11,7 +11,7 @@ public class MapCreator
 		public int floorY, ceilY, floorX, ceilX;
 		private bool pathFound = false;
 		public float waterPercentage = 0.25f;
-		public float pathPercentage = 0.45f;
+		public float pathPercentage = 0.3f;
 		//************* Water 12%;
 		//************* Placed tiles 16% ;
 		
@@ -263,7 +263,7 @@ public class MapCreator
 				puzzle.RemoveAt (0);
 				puzzle.RemoveAt (puzzle.Count - 1);
 	
-				int numPuzzleTiles = (int)Mathf.Floor (puzzle.Count * pathPercentage);
+				int numPuzzleTiles = (int)Mathf.Ceil (puzzle.Count * pathPercentage);
 		
 				while (puzzle.Count>numPuzzleTiles) {
 						int randomVal = (int)Mathf.Floor (Random.Range (0, puzzle.Count));
@@ -315,7 +315,7 @@ public class MapCreator
 				case 3:
 						pathWidth = 9;
 						pathHeight = 7;
-						pathLenght = 48;
+						pathLenght = 38;
 						break;
 				}
 		

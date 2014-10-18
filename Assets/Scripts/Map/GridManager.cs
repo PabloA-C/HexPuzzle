@@ -5,8 +5,7 @@ using System.Collections.Generic;
 public class GridManager: MonoBehaviour
 {
 
-		private float tileWidth;
-		private float tileHeight;
+		private float tileWidth, tileHeight;
 		private int numTilesX = 7;
 		private int numTilesY = 5;
 		public List<TileScript> grid;

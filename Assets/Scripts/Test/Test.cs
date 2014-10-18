@@ -6,7 +6,7 @@ public class Test : MonoBehaviour
 {
 		private GridManager gridManager;
 		private MapCreator mapCreator ;
-		public int difficulty = 1;
+		public int difficulty = 2;
 
 	
 		// Use this for initialization

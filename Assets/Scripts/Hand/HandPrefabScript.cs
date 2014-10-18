@@ -6,8 +6,9 @@ public class HandPrefabScript : MonoBehaviour
 {
 		
 		private List<TileScript> hand;
-		
-
+		private float tileWidth, tileHeight;
+		private int difficulty;
+	
 		// Use this for initialization
 		void Start ()
 		{
@@ -23,40 +24,87 @@ public class HandPrefabScript : MonoBehaviour
 	
 		}
 
-		public void setHand (List<TileScript> hand)
+		public void setHand (List<TileScript> hand, int difficulty)
 		{
 				this.hand = new System.Collections.Generic.List<TileScript> ();
 				this.hand = hand;
+				this.difficulty = difficulty;
 
+				GameObject auxPrefab = Instantiate (Resources.Load ("Template")) as GameObject;
+				tileWidth = auxPrefab.renderer.bounds.size.x;
+				tileHeight = auxPrefab.renderer.bounds.size.y;
+				Destroy (auxPrefab);
+		
 				drawHand ();
 	
 		}
-
 
 		public void drawHand ()
 		{
 				GameObject handArea = new GameObject ("Hand area");
 				handArea.transform.parent = GameObject.Find ("Hand").transform;
 				handArea.transform.position = GameObject.Find ("Hand").transform.position;
-		
-				int half = hand.Count / 2;
-			
-				int cont = 0;
 				
+				int half = hand.Count / 2;
+				int chunk1 = 0;
+				int chunk2 = 0;
 
+				switch (difficulty) {
+				case 1:
+						chunk1 = 4;
+						break;
+				case 2:
+						chunk1 = 5;
+						chunk2 = 3;
+						break;
+				case 3:
+						chunk1 = 7;
+						chunk2 = 6;
+						break;
+				}
+
+				float chunk1HeightStart = -((chunk1 * tileHeight * 0.75f) / 2) + (tileHeight / 2) * 0.75f;
+				float chunk2HeightStart = -((chunk2 * tileHeight * 0.75f) / 2) + (tileHeight / 2) * 0.75f;
+				float chunk1x = 7.5f;
+				float chunk2x = 7.7f + tileWidth;
+		
+				int cont = 0;
+				int cont2 = 0;
+						
+				float y = chunk1HeightStart;
 				foreach (TileScript tile in hand) {
-						float x = 6.4f;
-						if (cont < half) {
-								x = -6.4f;
+		
+						if (cont2 == chunk1) {
+								y = chunk2HeightStart;
+						}
+			
+						if (cont == half) {
+								y = chunk1HeightStart;
+								cont2 = 0;
 						}
 
+
+						float x = 1;
+						
+						if (cont < half) {
+								x = -1;
+						}
+
+						if (cont2 < chunk1) {
+								x = x * chunk1x;
+						} else {
+								x = x * chunk2x;
+						}
+						
 						GameObject tilePrefab = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
 						tilePrefab.GetComponent<TilePrefabScript> ().setTile (tile);
 						tilePrefab.name = "Tile " + cont;
 						tilePrefab.transform.parent = handArea.transform;
-						tilePrefab.transform.position = handArea.transform.position + new Vector3 (x, 0, 0);
+						tilePrefab.transform.position = handArea.transform.position + new Vector3 (x, y, cont);
 						cont++;
-						
+						cont2++;
+						y += tileHeight * 0.75f;
+			
 				}
 		}
 }
