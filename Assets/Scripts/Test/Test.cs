@@ -40,7 +40,6 @@ public class Test : MonoBehaviour
 
 						GameObject tilePrefab = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
 						
-						
 						tilePrefab.transform.position = new Vector3 (cont, -1, 0);
 						tilePrefab.GetComponent<TilePrefabScript> ().setTile (tile);
 						tilePrefab.name = "Tile " + cont;
