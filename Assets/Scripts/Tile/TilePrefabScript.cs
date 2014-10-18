@@ -8,7 +8,9 @@ public class TilePrefabScript : MonoBehaviour
 		private Vector3 position;
 		private Sprite[] TileSprites;
 		private Sprite[] HLSprites;
-			
+		private bool isFixed = false;	
+
+
 		// Use this for initialization
 		void Start ()
 		{
@@ -82,5 +84,15 @@ public class TilePrefabScript : MonoBehaviour
 				}
 				return res;
 			
+		}
+
+		public bool getIsFixed ()
+		{
+				return isFixed;
+		}
+
+		public void fixate ()
+		{
+				isFixed = true;
 		}
 }

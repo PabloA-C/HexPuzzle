@@ -1,37 +1,68 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Test : MonoBehaviour
 {
+		private GridManager gridManager;
+		private MapCreator mapCreator ;
+		public int difficulty = 1;
 
+	
 		// Use this for initialization
 		void Start ()
 		{
 
-				TileScript uno = new TileScript (new Coordinate (0, 0), "Start");
-				TileScript dos = new TileScript (new Coordinate (1, 0), "Turn");
-				TileScript tres = new TileScript (new Coordinate (2, 0), "Finish");
+				mapCreator = new MapCreator (difficulty);
+			
+				List<TileScript> map = mapCreator.getMap ();
+				List<TileScript> puzzle = mapCreator.getPuzzle ();
+				List<TileScript> hand = mapCreator.getHand ();
+			
+				int cont = -7;
 
 
+				foreach (TileScript tile in map) {
+			
+						GameObject tilePrefab = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
+			
+			
+						tilePrefab.transform.position = new Vector3 (cont, 0, 0);
+						tilePrefab.GetComponent<TilePrefabScript> ().setTile (tile);
+						tilePrefab.name = "Tile " + cont;
+						tilePrefab.transform.transform.parent = GameObject.Find ("Test").transform;
+						cont++;
+				}
 
-				GameObject tileObject1 = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
-				tileObject1.transform.position = new Vector3 (-2, 0, 0);
-				tileObject1.GetComponent<TilePrefabScript> ().setTile (uno);
-				tileObject1.name = "Uno";
-				tileObject1.transform.transform.parent = GameObject.Find ("Test").transform;
+				cont = -6;
+
+				foreach (TileScript tile in puzzle) {
+
+						GameObject tilePrefab = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
+						
+						
+						tilePrefab.transform.position = new Vector3 (cont, -1, 0);
+						tilePrefab.GetComponent<TilePrefabScript> ().setTile (tile);
+						tilePrefab.name = "Tile " + cont;
+						tilePrefab.transform.transform.parent = GameObject.Find ("Test").transform;
+						cont++;
+				}
+			
+			
+
 		
-				GameObject tileObject2 = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
-				tileObject2.transform.position = new Vector3 (0, 0, 0);
-				tileObject2.GetComponent<TilePrefabScript> ().setTile (dos);
-				tileObject2.name = "Dos";
-				tileObject2.transform.transform.parent = GameObject.Find ("Test").transform;
+				foreach (TileScript tile in hand) {
+			
+						GameObject tilePrefab = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
+			
+			
+						tilePrefab.transform.position = new Vector3 (cont, -2, 0);
+						tilePrefab.GetComponent<TilePrefabScript> ().setTile (tile);
+						tilePrefab.name = "Tile " + cont;
+						tilePrefab.transform.transform.parent = GameObject.Find ("Test").transform;
+						cont++;
+				}
 
-				GameObject tileObject3 = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
-				tileObject3.transform.position = new Vector3 (2, 0, 0);
-				tileObject3.GetComponent<TilePrefabScript> ().setTile (tres);
-				tileObject3.name = "Tres";
-				tileObject3.transform.transform.parent = GameObject.Find ("Test").transform;
-				
 
 				
 

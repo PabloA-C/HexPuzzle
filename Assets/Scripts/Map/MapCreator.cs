@@ -5,12 +5,13 @@ using System.Collections.Generic;
 public class MapCreator
 {
 		
-		private List<TileScript> completePath;
+		private List<TileScript> completePath, puzzle, hand;
 		private List<Coordinate> waterCoordinates;
 		private int pathWidth, pathHeight, pathLenght;
 		public int floorY, ceilY, floorX, ceilX;
 		private bool pathFound = false;
 		public float waterPercentage = 0.25f;
+		public float pathPercentage = 0.45f;
 		//************* Water 12%;
 		//************* Placed tiles 16% ;
 		
@@ -42,11 +43,12 @@ public class MapCreator
 				//Placing water tiles
 
 				placeWater ();
-
+				createPuzzleAndHand ();
 			
 			
 		}
 
+		//Finding a random path.
 		public void Backtracking (TileScript newTile, List<TileScript> currentPath)
 		{
 
@@ -86,7 +88,7 @@ public class MapCreator
 								//If we are on the first iteration the second tile will be placed at a random exit form the
 								//start, within the bounding box. We use the method "startExit()" to find an available one.
 				
-								prevExitPosition = sartExit (newTile.getCoordinates ());
+								prevExitPosition = startExit (newTile.getCoordinates ());
 			
 						} else {
 								//If we are not on the first iteration we can find the next position using the current tile's  
@@ -219,18 +221,82 @@ public class MapCreator
 			
 
 		}
-
+		
+		//Returns the complete map.
 		public List<TileScript> getMap ()
 		{
 				return completePath;
 		}
 
+		//Returns the puzzle.
+		public List<TileScript> getPuzzle ()
+		{
+				return puzzle;
+		}
+
+
+		//Returns the hand.
+		public List<TileScript> getHand ()
+		{
+				return hand;
+		}
+
+		//Returns the water tiles coordinates.
 		public List<Coordinate> getWaterCoordinates ()
 		{
 				return waterCoordinates;
 		}
 
+		//Creates takes out random tiles from the path to create an actual puzzle.
+		public void createPuzzleAndHand ()
+		{
+				hand = new System.Collections.Generic.List<TileScript> ();
 
+				puzzle = new System.Collections.Generic.List<TileScript> ();
+				
+				foreach (TileScript tile in completePath) {
+						puzzle.Add (tile);
+			
+				}
+
+				//Deleting the start and finish tiles.
+				puzzle.RemoveAt (0);
+				puzzle.RemoveAt (puzzle.Count - 1);
+	
+				int numPuzzleTiles = (int)Mathf.Floor (puzzle.Count * pathPercentage);
+		
+				while (puzzle.Count>numPuzzleTiles) {
+						int randomVal = (int)Mathf.Floor (Random.Range (0, puzzle.Count));
+						hand.Add (puzzle [randomVal]);
+						puzzle.RemoveAt (randomVal);	
+			
+				}
+				
+		}
+
+	
+		//Takes the free tiles of the map a places random water tiles.
+		public void placeWater ()
+		{
+		
+				waterCoordinates = new System.Collections.Generic.List<Coordinate> ();
+				List<Coordinate> freeCoordinates = getFreeCoordinates ();
+		
+				int numWaterTiles = (int)Mathf.Floor (freeCoordinates.Count * waterPercentage);
+		
+				while (waterCoordinates.Count<numWaterTiles) {
+						int randomVal = (int)Mathf.Floor (Random.Range (0, freeCoordinates.Count));
+						waterCoordinates.Add (freeCoordinates [randomVal]);
+						freeCoordinates.RemoveAt (randomVal);	
+			
+				}
+		}
+	
+
+
+
+
+		//-------Aux methods
 
 		//Setting the bounding grid.
 		public void setBounds (int difficulty)
@@ -263,7 +329,7 @@ public class MapCreator
 
 		}
 	
-		// Stablish a start tile on a random position inside the board.
+		// Returns a start tile on a random position inside the board.
 		public TileScript getSartTile ()
 		{
 		
@@ -284,8 +350,8 @@ public class MapCreator
 	
 	
 	
-		//Sets the exit of the start tile (selecting one inside the bounds).
-		public int sartExit (Coordinate coordinate)
+		//Sets the exit of the start tile (selecting a random one inside the bounds).
+		public int startExit (Coordinate coordinate)
 		{
 
 				int res = 0;
@@ -354,9 +420,7 @@ public class MapCreator
 		}
 
 
-		//Checking if we can place a tile on a coordinate: isOnBounds && placeUnused.
-
-
+		//Checking if the coordinate of a tile to be placed is inside the map's grid or not.
 		public bool isOnBounds (Coordinate coordinate)
 		{
 				bool res = true;
@@ -375,7 +439,7 @@ public class MapCreator
 				
 				return res;
 		}
-
+		//Checking if the tile about to place a tile is free or not.
 		public bool placeUnused (Coordinate coordinate, List<TileScript> tiles)
 		{
 				bool res = true;
@@ -393,6 +457,7 @@ public class MapCreator
 			
 		}
 
+		//Checking if a row is even or odd.
 		public int oneIfEven (int row)
 		{
 				int res = 0;
@@ -403,22 +468,9 @@ public class MapCreator
 				return res;
 		}
 
-		public void placeWater ()
-		{
-			
-				waterCoordinates = new System.Collections.Generic.List<Coordinate> ();
-				List<Coordinate> freeCoordinates = getFreeCoordinates ();
 
-				int numWaterTiles = (int)Mathf.Floor (freeCoordinates.Count * waterPercentage);
-			
-				while (waterCoordinates.Count<numWaterTiles) {
-						int randomVal = (int)Mathf.Floor (Random.Range (0, freeCoordinates.Count));
-						waterCoordinates.Add (freeCoordinates [randomVal]);
-						freeCoordinates.RemoveAt (randomVal);	
-						
-				}
-		}
-		
+
+		//Lists all the map's tiles that aren't part of the path.
 		public List<Coordinate> getFreeCoordinates ()
 		{
 				
