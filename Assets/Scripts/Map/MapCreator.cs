@@ -260,6 +260,9 @@ public class MapCreator
 				}
 
 				//Deleting the start and finish tiles.
+				
+				TileScript start = puzzle [0];
+				TileScript finish = puzzle [puzzle.Count - 1];
 				puzzle.RemoveAt (0);
 				puzzle.RemoveAt (puzzle.Count - 1);
 	
@@ -271,6 +274,10 @@ public class MapCreator
 						puzzle.RemoveAt (randomVal);	
 			
 				}
+				
+				puzzle.Insert (0, start);
+				puzzle.Insert (puzzle.Count - 1, finish);
+
 				
 		}
 

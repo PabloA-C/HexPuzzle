@@ -40,7 +40,7 @@ public class GridManager: MonoBehaviour
 						for (int x = 0; x<numTilesX+extraTile; x++) {
 			
 								bool isUsed = false;
-								foreach (TileScript mapTile in map.getMap()) {
+								foreach (TileScript mapTile in map.getPuzzle()) {
 								
 										if (mapTile.getCoordinates ().getX () == x && mapTile.getCoordinates ().getY () == y) {
 												grid.Add (mapTile);
