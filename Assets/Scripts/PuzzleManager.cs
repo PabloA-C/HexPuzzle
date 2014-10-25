@@ -17,12 +17,21 @@ public class PuzzleManager : MonoBehaviour
 				gridManager.createTiles ();
 				gridManager = GetComponent<GridManager> ();
 				GameObject.Find ("Hand").GetComponent<HandPrefabScript> ().setHand (mapCreator.getHand (), difficulty);
+				startGame ();
+
 		
 		}
+
 	
-		// Update is called once per frame
-		void Update ()
+		void startGame ()
 		{
 	
 		}
+
+		void placeTile ()
+		{
+
+		}
+
+
 }

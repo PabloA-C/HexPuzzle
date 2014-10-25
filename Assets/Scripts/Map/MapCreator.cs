@@ -12,9 +12,6 @@ public class MapCreator
 		private bool pathFound = false;
 		public float waterPercentage = 0.25f;
 		public float pathPercentage = 0.3f;
-		//************* Water 12%;
-		//************* Placed tiles 16% ;
-		
 
 		void Start ()
 		{
@@ -31,7 +28,7 @@ public class MapCreator
 		
 		public void run ()
 		{
-				//Creating the empty list to store the path trhough the iterations.
+				//Creating the empty list to store the path through the iterations.
 				List<TileScript> path = new System.Collections.Generic.List<TileScript> ();
 				
 				//Creating the start tile on a random location.
@@ -40,7 +37,7 @@ public class MapCreator
 				//Starting the backtracking algorithm.
 				Backtracking (startTile, path);
 
-				//Placing water tiles
+				//Placing water tiles and creating the hand.
 
 				placeWater ();
 				createPuzzleAndHand ();
@@ -52,15 +49,11 @@ public class MapCreator
 		public void Backtracking (TileScript newTile, List<TileScript> currentPath)
 		{
 
-				
-
 				//Adding the previous tiles to the new list of tiles.
-				List<TileScript> newPath = new System.Collections.Generic.List<TileScript> ();
 			
-				foreach (TileScript tile in currentPath) {
-						newPath.Add (tile);
+				List<TileScript> newPath = new List<TileScript> (currentPath);
 
-				}
+				
 			
 				//Adding the current tile to the new list.
 				newPath.Add (newTile);
@@ -71,11 +64,9 @@ public class MapCreator
 
 						pathFound = true;
 						
-						completePath = new System.Collections.Generic.List<TileScript> ();
+	
+						completePath = new List<TileScript> (newPath);
 
-						foreach (TileScript pathTile in newPath) {
-								completePath.Add (pathTile);
-						}
 
 				} else {
 						//If we didn't find the path yet, we go on.
@@ -143,8 +134,7 @@ public class MapCreator
 												attemp. There is repeated code here. That's a bad smell, but i'll be fixed 
 												on further refactorizations.
 												*/
-
-
+			
 												
 												int randomVal = (int)Mathf.Floor (Random.Range (0, possibleTiles.Count));
 												int chosen = possibleTiles [randomVal];
@@ -155,8 +145,7 @@ public class MapCreator
 								
 														//In the Straight tile, we dont mind the left or right orientation.
 														TileScript nextTile = new TileScript ("Straight", "Tile " + newPath.Count, nextIterationCoordinate, prevExitPosition, 0);
-														
-
+														Backtracking (nextTile, newPath);
 												}
 
 
@@ -252,12 +241,7 @@ public class MapCreator
 		{
 				hand = new System.Collections.Generic.List<TileScript> ();
 
-				puzzle = new System.Collections.Generic.List<TileScript> ();
-				
-				foreach (TileScript tile in completePath) {
-						puzzle.Add (tile);
-			
-				}
+				puzzle = new List<TileScript> (completePath);
 
 				//Deleting the start and finish tiles.
 				

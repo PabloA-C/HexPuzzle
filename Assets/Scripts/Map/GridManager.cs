@@ -6,12 +6,13 @@ public class GridManager: MonoBehaviour
 {
 
 		private float tileWidth, tileHeight;
-		private int numTilesX = 7;
-		private int numTilesY = 5;
-		public List<TileScript> grid;
-		public List<Coordinate> usedCoordinates;
+		private int numTilesX, numTilesY;
+		public List<TileScript> puzzle;
+		public List<TileScript> gameGrid;
 
-		//The grid should be generated on game start
+		
+
+
 		void Start ()
 		{
 				
@@ -19,10 +20,13 @@ public class GridManager: MonoBehaviour
 				tileWidth = auxPrefab.renderer.bounds.size.x;
 				tileHeight = auxPrefab.renderer.bounds.size.y;
 				Destroy (auxPrefab);
-				grid = new System.Collections.Generic.List<TileScript> ();
+				puzzle = new System.Collections.Generic.List<TileScript> ();
 				
 	
 		}
+
+
+		// Creating the list of tilescripts.
 
 		public void createGrid (MapCreator map)
 		{
@@ -40,33 +44,33 @@ public class GridManager: MonoBehaviour
 						for (int x = 0; x<numTilesX+extraTile; x++) {
 			
 								bool isUsed = false;
+								
 								foreach (TileScript mapTile in map.getPuzzle()) {
 								
 										if (mapTile.getCoordinates ().getX () == x && mapTile.getCoordinates ().getY () == y) {
-												grid.Add (mapTile);
+												puzzle.Add (mapTile);
 												isUsed = true;
 										}
 
 								}
 
-								if (!isUsed) {
+								
 										
-										foreach (Coordinate waterCoord in map.getWaterCoordinates()) {
-												if (waterCoord.getX () == x && waterCoord.getY () == y) {
+								foreach (Coordinate waterCoord in map.getWaterCoordinates()) {
+										if (waterCoord.getX () == x && waterCoord.getY () == y) {
 													
-														TileScript waterTile = new TileScript (new Coordinate (x, y), "Water");
-														grid.Add (waterTile);
-														isUsed = true;
-												}
-						
+												TileScript waterTile = new TileScript (new Coordinate (x, y), "Water");
+												puzzle.Add (waterTile);
+												isUsed = true;
 										}
+						
 
 										
 								}
 								
 								if (!isUsed) {
 										TileScript tile = new TileScript (new Coordinate (x, y), "Grass");
-										grid.Add (tile);
+										puzzle.Add (tile);
 								}
 				
 						}
@@ -87,7 +91,7 @@ public class GridManager: MonoBehaviour
 				bool alreadyCounted = true;
 				float oddRowOffset = 0;
 		
-				foreach (TileScript tile in grid) {
+				foreach (TileScript tile in puzzle) {
 						
 						int x = tile.getCoordinates ().getX ();
 						int y = tile.getCoordinates ().getY ();
