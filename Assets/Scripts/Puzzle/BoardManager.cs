@@ -2,16 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class GridManager: MonoBehaviour
+public class BoardManager: MonoBehaviour
 {
 
 		private float tileWidth, tileHeight;
 		private int numTilesX, numTilesY;
 		public List<TileScript> puzzle;
 		public List<TileScript> gameGrid;
-
-		
-
 
 		void Start ()
 		{
@@ -115,12 +112,9 @@ public class GridManager: MonoBehaviour
 						
 						tilePrefab.name = tile.getName ();
 						tilePrefab.transform.position = new Vector3 (tileWidth * x + oddRowOffset, tileHeight * y + gridVerticalOffset, 0);
-						tilePrefab.GetComponent<TilePrefabScript> ().setTile (tile);
+						tilePrefab.GetComponent<TilePrefabScript> ().setMapTile (tile);
 						tilePrefab.transform.parent = tileGrid.transform;
-
-					
-						
-						
+				
 						
 				}
 		

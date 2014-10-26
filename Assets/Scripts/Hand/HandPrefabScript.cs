@@ -8,21 +8,6 @@ public class HandPrefabScript : MonoBehaviour
 		private List<TileScript> hand;
 		private float tileWidth, tileHeight;
 		private int difficulty;
-	
-		// Use this for initialization
-		void Start ()
-		{
-	
-				
-				
-		
-		}
-	
-		// Update is called once per frame
-		void Update ()
-		{
-	
-		}
 
 		public void setHand (List<TileScript> hand, int difficulty)
 		{
@@ -45,6 +30,9 @@ public class HandPrefabScript : MonoBehaviour
 				handArea.transform.parent = GameObject.Find ("Hand").transform;
 				handArea.transform.position = GameObject.Find ("Hand").transform.position;
 				
+				// 1 if its the left hand, -1 if its the right one. This will be used at the selection time
+				int handPosition = 1;	
+
 				int half = hand.Count / 2;
 				int chunk1 = 0;
 				int chunk2 = 0;
@@ -65,8 +53,8 @@ public class HandPrefabScript : MonoBehaviour
 
 				float chunk1HeightStart = -((chunk1 * tileHeight * 0.75f) / 2) + (tileHeight / 2) * 0.75f;
 				float chunk2HeightStart = -((chunk2 * tileHeight * 0.75f) / 2) + (tileHeight / 2) * 0.75f;
-				float chunk1x = 7.5f;
-				float chunk2x = 7.7f + tileWidth;
+				float chunk1x = 7.7f;
+				float chunk2x = 7.9f + tileWidth;
 		
 				int cont = 0;
 				int cont2 = 0;
@@ -80,6 +68,7 @@ public class HandPrefabScript : MonoBehaviour
 			
 						if (cont == half) {
 								y = chunk1HeightStart;
+								handPosition = -1;
 								cont2 = 0;
 						}
 
@@ -95,12 +84,15 @@ public class HandPrefabScript : MonoBehaviour
 						} else {
 								x = x * chunk2x;
 						}
-						
+
+
 						GameObject tilePrefab = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
-						tilePrefab.GetComponent<TilePrefabScript> ().setTile (tile);
+						tilePrefab.GetComponent<TilePrefabScript> ().setHandTile (tile, handPosition);
 						tilePrefab.name = "Tile " + cont;
 						tilePrefab.transform.parent = handArea.transform;
 						tilePrefab.transform.position = handArea.transform.position + new Vector3 (x, y, cont);
+						tilePrefab.GetComponent<TilePrefabScript> ().setState (Enums.TilePrefabState.Ready);
+					
 						cont++;
 						cont2++;
 						y += tileHeight * 0.75f;

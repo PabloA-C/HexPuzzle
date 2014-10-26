@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Test : MonoBehaviour
 {
-		private GridManager gridManager;
+		private BoardManager boardManager;
 		private MapCreator mapCreator ;
 		public int difficulty = 2;
 
@@ -28,7 +28,7 @@ public class Test : MonoBehaviour
 			
 			
 						tilePrefab.transform.position = new Vector3 (cont, 0, 0);
-						tilePrefab.GetComponent<TilePrefabScript> ().setTile (tile);
+						tilePrefab.GetComponent<TilePrefabScript> ().setMapTile (tile);
 						tilePrefab.name = "Tile " + cont;
 						tilePrefab.transform.transform.parent = GameObject.Find ("Test").transform;
 						cont++;
@@ -40,8 +40,8 @@ public class Test : MonoBehaviour
 
 						GameObject tilePrefab = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
 						
-						tilePrefab.transform.position = new Vector3 (cont, -1, 0);
-						tilePrefab.GetComponent<TilePrefabScript> ().setTile (tile);
+						tilePrefab.transform.position = new Vector3 (cont, 0, 0);
+						tilePrefab.GetComponent<TilePrefabScript> ().setMapTile (tile);
 						tilePrefab.name = "Tile " + cont;
 						tilePrefab.transform.transform.parent = GameObject.Find ("Test").transform;
 						cont++;
@@ -56,21 +56,16 @@ public class Test : MonoBehaviour
 			
 			
 						tilePrefab.transform.position = new Vector3 (cont, -2, 0);
-						tilePrefab.GetComponent<TilePrefabScript> ().setTile (tile);
+						tilePrefab.GetComponent<TilePrefabScript> ().setMapTile (tile);
 						tilePrefab.name = "Tile " + cont;
 						tilePrefab.transform.transform.parent = GameObject.Find ("Test").transform;
+						tilePrefab.GetComponent<TilePrefabScript> ().setState (Enums.TilePrefabState.Ready);
 						cont++;
 				}
 
 
 				
 
-	
-		}
-	
-		// Update is called once per frame
-		void Update ()
-		{
 	
 		}
 }

@@ -46,10 +46,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Enums\Enums.cs" />
      <Compile Include="Assets\Scripts\Hand\HandPrefabScript.cs" />
-     <Compile Include="Assets\Scripts\Map\Coordinate.cs" />
-     <Compile Include="Assets\Scripts\Map\GridManager.cs" />
-     <Compile Include="Assets\Scripts\Map\MapCreator.cs" />
+     <Compile Include="Assets\Scripts\Puzzle\BoardManager.cs" />
+     <Compile Include="Assets\Scripts\Puzzle\Coordinate.cs" />
+     <Compile Include="Assets\Scripts\Puzzle\MapCreator.cs" />
      <Compile Include="Assets\Scripts\PuzzleManager.cs" />
      <Compile Include="Assets\Scripts\Test\Test.cs" />
      <Compile Include="Assets\Scripts\Tile\TilePrefabScript.cs" />
