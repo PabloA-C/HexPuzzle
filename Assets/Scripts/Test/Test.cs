@@ -15,7 +15,7 @@ public class Test : MonoBehaviour
 
 				mapCreator = new MapCreator (difficulty);
 			
-				List<TileScript> map = mapCreator.getMap ();
+				List<TileScript> map = mapCreator.getCompletePath ();
 				List<TileScript> puzzle = mapCreator.getPuzzle ();
 				List<TileScript> hand = mapCreator.getHand ();
 			

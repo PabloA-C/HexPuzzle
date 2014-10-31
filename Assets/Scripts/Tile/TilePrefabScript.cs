@@ -6,7 +6,7 @@ public class TilePrefabScript : MonoBehaviour
 
 		private Sprite[] TileSprites;
 		private Sprite[] HLSprites;
-		private TileScript tile;
+		private TileScript tileScript;
 		private Vector3 originalPosition;
 		private Vector3 position;
 		private int handPosition;
@@ -14,13 +14,16 @@ public class TilePrefabScript : MonoBehaviour
 	
 		void OnMouseDown ()
 		{
-
+				//On the hand
 				if (state == Enums.TilePrefabState.Ready) {	
 
+						
 						//Board.placeTile(This)
 
 				}
-				
+
+
+				//On the board		
 				if (state == Enums.TilePrefabState.Available) {	
 			
 						//Board.setTarget(this coords)
@@ -31,6 +34,7 @@ public class TilePrefabScript : MonoBehaviour
 		void OnMouseEnter ()
 		{
 
+				//On the hand
 				if (state == Enums.TilePrefabState.Ready) {	
 			
 						//Board.placeTile(This)
@@ -38,7 +42,8 @@ public class TilePrefabScript : MonoBehaviour
 
 			
 				}
-		
+
+				//On the board
 				if (state == Enums.TilePrefabState.Available) {	
 			
 						//Board.setTarget(this coords)
@@ -50,6 +55,8 @@ public class TilePrefabScript : MonoBehaviour
 	
 		void OnMouseExit ()
 		{
+
+				//On the hand
 				if (state == Enums.TilePrefabState.Ready) {	
 			
 						//Board.placeTile(This)
@@ -57,7 +64,7 @@ public class TilePrefabScript : MonoBehaviour
 			
 			
 				}
-		
+				//On the board
 				if (state == Enums.TilePrefabState.Available) {	
 			
 						//Board.setTarget(this coords)
@@ -66,9 +73,35 @@ public class TilePrefabScript : MonoBehaviour
 				}
 		}
 	
-		public void setState (Enums.TilePrefabState state)
+		public void setState (Enums.TilePrefabState newState)
 		{
-				this.state = state;
+				
+				if (state == Enums.TilePrefabState.Ready) {
+
+						if (newState == Enums.TilePrefabState.Blocked) {
+								transform.Translate (new Vector3 (0, 0, 10), Space.World);
+
+						}
+				}
+
+			
+				if (state == Enums.TilePrefabState.Blocked) {
+			
+						if (newState == Enums.TilePrefabState.Ready) {
+								transform.Translate (new Vector3 (0, 0, -10), Space.World);
+				
+						}
+				}
+
+		
+				if (state == Enums.TilePrefabState.Available) {
+			
+			
+				}
+				
+				
+
+				this.state = newState;
 				setAlpha ();
 		}
 	
@@ -124,7 +157,7 @@ public class TilePrefabScript : MonoBehaviour
 		public void setHandTile (TileScript tile, int handPosition)
 		{
 		
-				this.tile = tile;
+				this.tileScript = tile;
 				this.handPosition = handPosition;
 		
 				TileSprites = Resources.LoadAll<Sprite> (@"Sprites/TileSheet");
@@ -140,7 +173,7 @@ public class TilePrefabScript : MonoBehaviour
 		public void setMapTile (TileScript tile)
 		{
 		
-				this.tile = tile;
+				this.tileScript = tile;
 				setState (Enums.TilePrefabState.Fixed);
 				TileSprites = Resources.LoadAll<Sprite> (@"Sprites/TileSheet");
 				HLSprites = Resources.LoadAll<Sprite> (@"Sprites/HighLights");
@@ -178,7 +211,10 @@ public class TilePrefabScript : MonoBehaviour
 				return res;
 		
 		}
-
+		public TileScript getTileScript ()
+		{
+				return tileScript;
+		}
 	
 }
 

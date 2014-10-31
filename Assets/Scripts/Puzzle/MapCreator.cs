@@ -10,7 +10,8 @@ public class MapCreator
 		private int pathWidth, pathHeight, pathLenght;
 		public int floorY, ceilY, floorX, ceilX;
 		private bool pathFound = false;
-		public float waterPercentage = 0.25f;
+		//public float waterPercentage = 0.25f;
+		public float waterPercentage = 0.0f;
 		public float pathPercentage = 0.3f;
 
 		void Start ()
@@ -212,7 +213,7 @@ public class MapCreator
 		}
 		
 		//Returns the complete map.
-		public List<TileScript> getMap ()
+		public List<TileScript> getCompletePath ()
 		{
 				return completePath;
 		}
@@ -251,7 +252,11 @@ public class MapCreator
 				puzzle.RemoveAt (puzzle.Count - 1);
 	
 				int numPuzzleTiles = (int)Mathf.Ceil (puzzle.Count * pathPercentage);
-		
+			
+				// We make sure that we get the first tile out so the user has to select the starting tile.
+				hand.Add (puzzle [0]);
+				puzzle.RemoveAt (0);
+
 				while (puzzle.Count>numPuzzleTiles) {
 						int randomVal = (int)Mathf.Floor (Random.Range (0, puzzle.Count));
 						hand.Add (puzzle [randomVal]);

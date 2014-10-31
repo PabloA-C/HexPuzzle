@@ -4,24 +4,31 @@ using System.Collections.Generic;
 
 public class BoardManager: MonoBehaviour
 {
-
 		private float tileWidth, tileHeight;
 		private int numTilesX, numTilesY;
 		public List<TileScript> puzzle;
 		public List<TileScript> gameGrid;
-
+		
+		
 		void Start ()
 		{
-				
+
 				GameObject auxPrefab = Instantiate (Resources.Load ("Template")) as GameObject;
 				tileWidth = auxPrefab.renderer.bounds.size.x;
 				tileHeight = auxPrefab.renderer.bounds.size.y;
 				Destroy (auxPrefab);
 				puzzle = new System.Collections.Generic.List<TileScript> ();
-				
-	
+		
 		}
 
+
+		public void run (MapCreator mapCreator)
+		{
+
+				createGrid (mapCreator);
+				createTiles ();
+
+		}
 
 		// Creating the list of tilescripts.
 
@@ -108,12 +115,12 @@ public class BoardManager: MonoBehaviour
 						}
 			
 						GameObject tilePrefab = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
-			
-						
 						tilePrefab.name = tile.getName ();
 						tilePrefab.transform.position = new Vector3 (tileWidth * x + oddRowOffset, tileHeight * y + gridVerticalOffset, 0);
 						tilePrefab.GetComponent<TilePrefabScript> ().setMapTile (tile);
 						tilePrefab.transform.parent = tileGrid.transform;
+						
+						
 				
 						
 				}
