@@ -10,10 +10,12 @@ public class Enums : MonoBehaviour
 				
 				Blocked, //Can't be selected
 				Ready, //Can be selected
-				Used,    // Can't be selected but moved to a position and full alpha.s
-				Available, //Initial grass tiles.
-				Target,
-				Unavailable,	
+				Used,    // Can't be selected but moved to a position and full alpha.
+
+				Target,  // Objective 
+				Available, // Initial grass tiles.
+				Normal,   // Normal tile
+				Water, 
 				Fixed    // Tile that belongs to the map.
 				
 		}
@@ -21,11 +23,11 @@ public class Enums : MonoBehaviour
 	
 		public enum BoardState
 		{
-				WaitingForTarget,
-				WaitingForTile,
-				Blocked
+				Blocked,
+				Free,
+				
 					
-	}
+		}
 		;
 
 		

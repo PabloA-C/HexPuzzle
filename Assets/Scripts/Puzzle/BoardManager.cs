@@ -118,7 +118,9 @@ public class BoardManager: MonoBehaviour
 						tilePrefab.transform.parent = tileGrid.transform;
 
 						if (tilePrefab.GetComponent<TilePrefabScript> ().getTileScript ().getType () == "Grass") {
-								tilePrefab.GetComponent<TilePrefabScript> ().setState (Enums.TilePrefabState.Unavailable);
+								tilePrefab.GetComponent<TilePrefabScript> ().setState (Enums.TilePrefabState.Normal);
+						} else if (tilePrefab.GetComponent<TilePrefabScript> ().getTileScript ().getType () == "Water") {
+								tilePrefab.GetComponent<TilePrefabScript> ().setState (Enums.TilePrefabState.Water);
 						} else {
 								tilePrefab.GetComponent<TilePrefabScript> ().setState (Enums.TilePrefabState.Fixed);
 						}

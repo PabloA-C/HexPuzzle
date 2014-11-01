@@ -10,10 +10,14 @@ public class TilePrefabScript : MonoBehaviour
 		private Vector3 originalPosition;
 		private Vector3 position;
 		private int handPosition;
-		public Enums.TilePrefabState state;
-	
+		private Enums.TilePrefabState state;
+		private PuzzleManager puzzleManager;
+		
+
 		void OnMouseDown ()
 		{
+
+				
 				//On the hand
 				if (state == Enums.TilePrefabState.Ready) {	
 
@@ -26,13 +30,14 @@ public class TilePrefabScript : MonoBehaviour
 				//On the board		
 				if (state == Enums.TilePrefabState.Available) {	
 			
-						setState (Enums.TilePrefabState.Target);
+						puzzleManager.setTarget (getTileScript ().getCoordinates ());
 			
 				}
 		}
 	
 		void OnMouseEnter ()
 		{
+				
 
 				//On the hand
 				if (state == Enums.TilePrefabState.Ready) {	
@@ -55,7 +60,7 @@ public class TilePrefabScript : MonoBehaviour
 	
 		void OnMouseExit ()
 		{
-
+				
 				//On the hand
 				if (state == Enums.TilePrefabState.Ready) {	
 			
@@ -78,24 +83,24 @@ public class TilePrefabScript : MonoBehaviour
 				// Changing the Z coord of the tile
 				
 				if (newState == Enums.TilePrefabState.Ready) {
-						transform.Translate (new Vector3 (0, 0, -10), Space.World);
+						transform.Translate (new Vector3 (0, 0, -5), Space.World);
 			
 				}
 
 				if (newState == Enums.TilePrefabState.Blocked) {
-						transform.Translate (new Vector3 (0, 0, 10), Space.World);
+						transform.Translate (new Vector3 (0, 0, 5), Space.World);
 			
 				}
 
 				if (newState == Enums.TilePrefabState.Available) {
-						transform.Translate (new Vector3 (0, 0, -10), Space.World);
+						transform.Translate (new Vector3 (0, 0, -5), Space.World);
 						GetComponent<SpriteRenderer> ().sprite = HLSprites [0];
 						
 				}
 
 
-				if (newState == Enums.TilePrefabState.Unavailable) {
-						transform.Translate (new Vector3 (0, 0, 10), Space.World);
+				if (newState == Enums.TilePrefabState.Normal) {
+						transform.Translate (new Vector3 (0, 0, 5), Space.World);
 						GetComponent<SpriteRenderer> ().sprite = TileSprites [getTypeIndex ("Grass")];
 			
 				}
@@ -103,7 +108,7 @@ public class TilePrefabScript : MonoBehaviour
 
 				if (newState == Enums.TilePrefabState.Target) {
 						hover (false);
-						transform.Translate (new Vector3 (0, 0, 10), Space.World);
+						transform.Translate (new Vector3 (0, 0, 5), Space.World);
 						GetComponent<SpriteRenderer> ().sprite = HLSprites [1];
 			
 				}
@@ -114,7 +119,7 @@ public class TilePrefabScript : MonoBehaviour
 				setAlpha ();
 		}
 	
-		public void setAlpha ()
+		void setAlpha ()
 		{
 				float a = 1f;
 		
@@ -130,7 +135,7 @@ public class TilePrefabScript : MonoBehaviour
 				renderer.material.color = color;
 		}
 	
-		public void hover (bool mouseEntered)
+		void hover (bool mouseEntered)
 		{
 	
 				Vector3 originalScale = transform.localScale;
@@ -143,12 +148,12 @@ public class TilePrefabScript : MonoBehaviour
 				
 		
 				if (mouseEntered) {
-						transform.Translate (new Vector3 (.16f * handPosition, 0, -9), Space.World);
+						transform.Translate (new Vector3 (.16f * handPosition, 0, -4), Space.World);
 						GetComponent<Transform> ().localScale.Set (1.2f, 1.2f, 1f);
 						transform.localScale = bigScale;
 						
 				} else {
-						transform.Translate (new Vector3 (-.16f * handPosition, 0, 9), Space.World);
+						transform.Translate (new Vector3 (-.16f * handPosition, 0, 4), Space.World);
 						GetComponent<Transform> ().localScale.Set (1f, 1f, 1f);
 						transform.localScale = originalScale;
 						
@@ -163,6 +168,7 @@ public class TilePrefabScript : MonoBehaviour
 		
 				this.tileScript = tile;
 				this.handPosition = handPosition;
+				this.puzzleManager = GameObject.Find ("Puzzle").GetComponent<PuzzleManager> ();
 		
 				TileSprites = Resources.LoadAll<Sprite> (@"Sprites/TileSheet");
 				HLSprites = Resources.LoadAll<Sprite> (@"Sprites/HighLights");
@@ -176,8 +182,10 @@ public class TilePrefabScript : MonoBehaviour
 	
 		public void setMapTile (TileScript tile)
 		{
-		
+
+
 				this.tileScript = tile;
+				this.puzzleManager = GameObject.Find ("Puzzle").GetComponent<PuzzleManager> ();
 				setState (Enums.TilePrefabState.Fixed);
 				TileSprites = Resources.LoadAll<Sprite> (@"Sprites/TileSheet");
 				HLSprites = Resources.LoadAll<Sprite> (@"Sprites/HighLights");
@@ -188,7 +196,7 @@ public class TilePrefabScript : MonoBehaviour
 		
 		}
 	
-		public int getTypeIndex (string type)
+		int getTypeIndex (string type)
 		{
 				int res = 0;
 				switch (type) {
