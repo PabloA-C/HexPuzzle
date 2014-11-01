@@ -7,11 +7,15 @@ public class Enums : MonoBehaviour
 		public enum TilePrefabState
 		{
 				
-				Ready,   //Can be selected
+				
 				Blocked, //Can't be selected
+				Ready, //Can be selected
 				Used,    // Can't be selected but moved to a position and full alpha.s
 				Available, //Initial grass tiles.
+				Target,
+				Unavailable,	
 				Fixed    // Tile that belongs to the map.
+				
 		}
 		;
 	

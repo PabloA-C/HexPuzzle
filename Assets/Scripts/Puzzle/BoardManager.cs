@@ -6,9 +6,7 @@ public class BoardManager: MonoBehaviour
 {
 		private float tileWidth, tileHeight;
 		private int numTilesX, numTilesY;
-		public List<TileScript> puzzle;
 		public List<TileScript> gameGrid;
-		
 		
 		void Start ()
 		{
@@ -17,10 +15,9 @@ public class BoardManager: MonoBehaviour
 				tileWidth = auxPrefab.renderer.bounds.size.x;
 				tileHeight = auxPrefab.renderer.bounds.size.y;
 				Destroy (auxPrefab);
-				puzzle = new System.Collections.Generic.List<TileScript> ();
+				gameGrid = new System.Collections.Generic.List<TileScript> ();
 		
 		}
-
 
 		public void run (MapCreator mapCreator)
 		{
@@ -52,7 +49,7 @@ public class BoardManager: MonoBehaviour
 								foreach (TileScript mapTile in map.getPuzzle()) {
 								
 										if (mapTile.getCoordinates ().getX () == x && mapTile.getCoordinates ().getY () == y) {
-												puzzle.Add (mapTile);
+												gameGrid.Add (mapTile);
 												isUsed = true;
 										}
 
@@ -64,7 +61,7 @@ public class BoardManager: MonoBehaviour
 										if (waterCoord.getX () == x && waterCoord.getY () == y) {
 													
 												TileScript waterTile = new TileScript (new Coordinate (x, y), "Water");
-												puzzle.Add (waterTile);
+												gameGrid.Add (waterTile);
 												isUsed = true;
 										}
 						
@@ -74,7 +71,7 @@ public class BoardManager: MonoBehaviour
 								
 								if (!isUsed) {
 										TileScript tile = new TileScript (new Coordinate (x, y), "Grass");
-										puzzle.Add (tile);
+										gameGrid.Add (tile);
 								}
 				
 						}
@@ -95,7 +92,7 @@ public class BoardManager: MonoBehaviour
 				bool alreadyCounted = true;
 				float oddRowOffset = 0;
 		
-				foreach (TileScript tile in puzzle) {
+				foreach (TileScript tile in gameGrid) {
 						
 						int x = tile.getCoordinates ().getX ();
 						int y = tile.getCoordinates ().getY ();
@@ -113,13 +110,18 @@ public class BoardManager: MonoBehaviour
 								gridVerticalOffset -= tileHeight * 0.25f;
 				
 						}
-			
+
 						GameObject tilePrefab = Instantiate (Resources.Load ("Prefabs/TilePrefab")) as GameObject;
 						tilePrefab.name = tile.getName ();
 						tilePrefab.transform.position = new Vector3 (tileWidth * x + oddRowOffset, tileHeight * y + gridVerticalOffset, 0);
 						tilePrefab.GetComponent<TilePrefabScript> ().setMapTile (tile);
 						tilePrefab.transform.parent = tileGrid.transform;
-						
+
+						if (tilePrefab.GetComponent<TilePrefabScript> ().getTileScript ().getType () == "Grass") {
+								tilePrefab.GetComponent<TilePrefabScript> ().setState (Enums.TilePrefabState.Unavailable);
+						} else {
+								tilePrefab.GetComponent<TilePrefabScript> ().setState (Enums.TilePrefabState.Fixed);
+						}
 						
 				
 						
@@ -134,5 +136,8 @@ public class BoardManager: MonoBehaviour
 		}
 
 
-		
+		public List<TileScript> getGameGrid ()
+		{
+				return gameGrid;
+		}
 }

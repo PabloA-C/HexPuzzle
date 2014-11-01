@@ -8,7 +8,6 @@ public class HandPrefabScript : MonoBehaviour
 		private List<TileScript> hand;
 		private float tileWidth, tileHeight;
 		private int difficulty;
-		
 
 		public void setHand (List<TileScript> hand, int difficulty)
 		{
@@ -92,7 +91,6 @@ public class HandPrefabScript : MonoBehaviour
 						tilePrefab.name = "Tile " + cont;
 						tilePrefab.transform.parent = handArea.transform;
 						tilePrefab.transform.position = handArea.transform.position + new Vector3 (x, y, cont);
-						//	tilePrefab.GetComponent<TilePrefabScript> ().setState (Enums.TilePrefabState.Ready);
 					
 
 						cont++;

@@ -8,8 +8,10 @@ public class PuzzleManager : MonoBehaviour
 		private MapCreator mapCreator;
 		private HandPrefabScript hand;
 		public int difficulty = 3;
-		public Coordinate target;
-
+		public List<Coordinate> startTilesCoordinates;
+		public List<Coordinate> movesCoordinates;
+		public List<TileScript> movesTiles;
+		
 		
 		// Use this for initialization
 		void Start ()
@@ -37,10 +39,22 @@ public class PuzzleManager : MonoBehaviour
 		{
 
 				// Finding the avaiable starting tiles.
-				getStartOptions ();
+				storeStartTiles ();
+
+				enableStartTiles ();
+			
+			
 		}
+
+				
+		void enableStartTiles ()
+		{
+
+				enableTiles (startTilesCoordinates);
 		
-		void getStartOptions ()
+		}
+
+		void  storeStartTiles ()
 		{
 				//Getting the start tile and obtaining all the coordinates around it.
 				
@@ -65,45 +79,65 @@ public class PuzzleManager : MonoBehaviour
 				allStartCoordinates.Add (exit5);
 				allStartCoordinates.Add (exit6);
 
+				startTilesCoordinates = new System.Collections.Generic.List<Coordinate> ();
+		
 				// Iterating through every possible tile around the start tile.
 				foreach (Coordinate coord  in allStartCoordinates) {
-						
 
-						object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
-						foreach (object o in obj) {
-								TilePrefabScript tilePrefab = (TilePrefabScript)o;
-					
-								Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
-					
-								if (coord.getX () == prefabCoord.getX () && coord.getY () == prefabCoord.getY ()) {
-						
-										if (tilePrefab.getTileScript ().getType () == "Grass") {
+						foreach (TileScript tileScript in boardManager.getGameGrid()) {
+
+			
+
+								if (coord.getX () == tileScript.getCoordinates ().getX () && coord.getY () == tileScript.getCoordinates ().getY ()) {
 							
-												tilePrefab.setState (Enums.TilePrefabState.Available);
-							
-										}
-						
+
+					
+										startTilesCoordinates.Add (tileScript.getCoordinates ());
+										
+					
 								}
-								
-					
-						
-						}
-					
 				
-
+				
+				
+						}
+			
+			
 				}
 
 
-		
-		
-		
-		
 		}
 	
 	
 		//Aux methods
-	
-	
+
+		public void enableTiles (List<Coordinate> coordinates)
+		{
+			
+				foreach (Coordinate coord in coordinates) {
+					
+						object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+						foreach (object o in obj) {
+								TilePrefabScript tilePrefab = (TilePrefabScript)o;
+			
+								Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
+			
+								
+								if (coord.getX () == prefabCoord.getX () && coord.getY () == prefabCoord.getY ()) {
+
+										
+										if (tilePrefab.getState () == Enums.TilePrefabState.Unavailable) {
+												tilePrefab.setState (Enums.TilePrefabState.Available);
+										}
+
+								}
+
+							
+						}
+			
+			
+			
+				}
+		}
 	
 		//Checking if a row is even or odd.
 		public int oneIfEven (int row)

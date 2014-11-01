@@ -26,7 +26,7 @@ public class TilePrefabScript : MonoBehaviour
 				//On the board		
 				if (state == Enums.TilePrefabState.Available) {	
 			
-						//Board.setTarget(this coords)
+						setState (Enums.TilePrefabState.Target);
 			
 				}
 		}
@@ -38,7 +38,7 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Ready) {	
 			
 						//Board.placeTile(This)
-						highlight (true);
+						hover (true);
 
 			
 				}
@@ -47,7 +47,7 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Available) {	
 			
 						//Board.setTarget(this coords)
-						highlight (true);
+						hover (true);
 			
 				}
 		
@@ -60,7 +60,7 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Ready) {	
 			
 						//Board.placeTile(This)
-						highlight (false);
+						hover (false);
 			
 			
 				}
@@ -68,37 +68,46 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Available) {	
 			
 						//Board.setTarget(this coords)
-						highlight (false);
+						hover (false);
 				
 				}
 		}
 	
 		public void setState (Enums.TilePrefabState newState)
 		{
+				// Changing the Z coord of the tile
 				
-				if (state == Enums.TilePrefabState.Ready) {
-
-						if (newState == Enums.TilePrefabState.Blocked) {
-								transform.Translate (new Vector3 (0, 0, 10), Space.World);
-
-						}
+				if (newState == Enums.TilePrefabState.Ready) {
+						transform.Translate (new Vector3 (0, 0, -10), Space.World);
+			
 				}
 
+				if (newState == Enums.TilePrefabState.Blocked) {
+						transform.Translate (new Vector3 (0, 0, 10), Space.World);
 			
-				if (state == Enums.TilePrefabState.Blocked) {
-			
-						if (newState == Enums.TilePrefabState.Ready) {
-								transform.Translate (new Vector3 (0, 0, -10), Space.World);
-				
-						}
 				}
 
-		
-				if (state == Enums.TilePrefabState.Available) {
-			
+				if (newState == Enums.TilePrefabState.Available) {
+						transform.Translate (new Vector3 (0, 0, -10), Space.World);
+						GetComponent<SpriteRenderer> ().sprite = HLSprites [0];
+						
+				}
+
+
+				if (newState == Enums.TilePrefabState.Unavailable) {
+						transform.Translate (new Vector3 (0, 0, 10), Space.World);
+						GetComponent<SpriteRenderer> ().sprite = TileSprites [getTypeIndex ("Grass")];
 			
 				}
-				
+
+
+				if (newState == Enums.TilePrefabState.Target) {
+						hover (false);
+						transform.Translate (new Vector3 (0, 0, 10), Space.World);
+						GetComponent<SpriteRenderer> ().sprite = HLSprites [1];
+			
+				}
+
 				
 
 				this.state = newState;
@@ -107,17 +116,12 @@ public class TilePrefabScript : MonoBehaviour
 	
 		public void setAlpha ()
 		{
-				float a = 1;
+				float a = 1f;
 		
-				switch (state) {
-				case Enums.TilePrefabState.Ready:
-			
-						a = 1f;
-						break;
-				case Enums.TilePrefabState.Blocked:
+				if (state == Enums.TilePrefabState.Blocked) {
 			
 						a = 0.5f;
-						break;
+						
 			
 				}
 		
@@ -126,7 +130,7 @@ public class TilePrefabScript : MonoBehaviour
 				renderer.material.color = color;
 		}
 	
-		public void highlight (bool mouseEntered)
+		public void hover (bool mouseEntered)
 		{
 	
 				Vector3 originalScale = transform.localScale;
@@ -149,7 +153,7 @@ public class TilePrefabScript : MonoBehaviour
 						transform.localScale = originalScale;
 						
 				}
-		
+
 				
 
 		}
@@ -211,6 +215,12 @@ public class TilePrefabScript : MonoBehaviour
 				return res;
 		
 		}
+
+		public Enums.TilePrefabState getState ()
+		{
+				return state;
+		}
+
 		public TileScript getTileScript ()
 		{
 				return tileScript;
