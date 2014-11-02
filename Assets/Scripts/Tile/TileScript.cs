@@ -132,7 +132,13 @@ public class TileScript
 		{
 				return coordinates;
 		}
-			
+		
+		public void setCoordinates (Coordinate coordinates)
+		{
+				this.coordinates = coordinates;
+		}
+	
+	
 		public int getRotation ()
 		{
 				return rotation;

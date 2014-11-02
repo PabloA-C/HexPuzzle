@@ -9,10 +9,15 @@ public class PuzzleManager : MonoBehaviour
 		private HandPrefabScript hand;
 		public int difficulty = 3;
 		private Enums.BoardState boardState;
+		
 		public List<Coordinate> startTilesCoordinates;
-		public List<Coordinate> movesCoordinates;
-		public List<TileScript> movesTiles;
-		private Vector3 targetPosition;
+		
+		public List<TileScript> moves;
+		
+		private Coordinate targetCoord;
+		private Vector3 targetPos;
+		
+		// This will be used to store the location of fixed tiles.
 		private  Coordinate tempCoord;
 		private int tempExit;
 			
@@ -35,8 +40,7 @@ public class PuzzleManager : MonoBehaviour
 				hand.setHand (mapCreator.getHand (), difficulty);
 	
 				// Setting up the moves storing.
-				movesCoordinates = new System.Collections.Generic.List<Coordinate> ();
-				movesTiles = new System.Collections.Generic.List<TileScript> ();
+				moves = new System.Collections.Generic.List<TileScript> ();
 			
 				// Storing the start tiles.
 				storeStartTiles ();
@@ -77,37 +81,35 @@ public class PuzzleManager : MonoBehaviour
 								if (tilePrefab.getState () == Enums.TilePrefabState.Ready) {
 						
 										if (readyTile.getX () == prefabCoord.getX () && readyTile.getY () == prefabCoord.getY ()) {
-							
-												tilePrefab.setState (Enums.TilePrefabState.Used);
-												tilePrefab.transform.position = targetPosition;
-												// The coord of the hand tile is now the same than the one on the board.
-												prefabCoord = movesCoordinates [movesCoordinates.Count - 1];
+
+												
+												tilePrefab.transform.position = targetPos;
+												tilePrefab.getTileScript ().setCoordinates (targetCoord);
+												moves.Add (tilePrefab.getTileScript ());
 													
 												exit = tilePrefab.getTileScript ().getFreeExit ();
-												nextCoordinate = mapCreator.getCoordinateFromExit (prefabCoord, exit);
-												
-	
+												nextCoordinate = mapCreator.getCoordinateFromExit (targetCoord, exit);
+												tilePrefab.setState (Enums.TilePrefabState.Used);
+						
 										}
 								}
 						}
 						
-						if (!checkVictory ()) {
+						
+						//TODO detect winning	
 								
+						string outCome = setTarget (nextCoordinate, exit);
 								
-								string outCome = setTarget (nextCoordinate, exit);
-								
-								while (outCome == "Fixed") {
+						while (outCome == "Fixed") {
 										
-										outCome = setTarget (tempCoord, tempExit);
+								outCome = setTarget (tempCoord, tempExit);
 									
-								}
-								
-	
-								//	boardState = Enums.BoardState.Free;
-				
-						} else {
-								//TODO victory thing.
 						}
+								
+						enableHand ();
+						boardState = Enums.BoardState.Free;
+				
+						
 			
 				}
 				
@@ -137,9 +139,8 @@ public class PuzzleManager : MonoBehaviour
 										if (tilePrefab.getState () == Enums.TilePrefabState.Normal) {
 												outCome = "Normal";
 												
-												movesCoordinates.Add (targetCoordinate);
-												movesTiles.Add (tilePrefab.getTileScript ());
-												targetPosition = tilePrefab.transform.position;
+												targetCoord = prefabCoord;
+												targetPos = tilePrefab.transform.position;
 												tilePrefab.setState (Enums.TilePrefabState.Target);
 													
 												Debug.Log ("Ok!");
@@ -190,7 +191,7 @@ public class PuzzleManager : MonoBehaviour
 		void enableHand ()
 		{
 			
-				TileScript target = movesTiles [movesTiles.Count - 1];
+				TileScript target = moves [moves.Count - 1];
 			
 				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
 				foreach (object o in obj) {
@@ -198,8 +199,7 @@ public class PuzzleManager : MonoBehaviour
 						TilePrefabScript tilePrefab = (TilePrefabScript)o;
 				
 						TileScript handTile = tilePrefab.getTileScript ();
-				
-				
+					
 				
 						if (tilePrefab.getState () == Enums.TilePrefabState.Ready || tilePrefab.getState () == Enums.TilePrefabState.Blocked) {
 					
@@ -229,64 +229,30 @@ public class PuzzleManager : MonoBehaviour
 				bool res = false;
 				int exit = 0;
 			
-				TileScript previous = movesTiles [movesTiles.Count - 2];
-			
-				// We suppose the open exit on the prev tile is the first one and check if it's actually the second or not.
-				// Thus, we wont be using destPreviousExit1
-				//Coordinate destPreviousExit1 = mapCreator.getCoordinateFromExit (previous .getCoordinates (), previous.getExits () [0]);
-				Coordinate destPreviousExit2 = mapCreator.getCoordinateFromExit (previous .getCoordinates (), previous.getExits () [1]);
-			
-			
-				TileScript target = movesTiles [movesTiles.Count - 1];
-				Coordinate destTargetExit1 = mapCreator.getCoordinateFromExit (target .getCoordinates (), currentTile.getExits () [0]);
-				Coordinate destTargetExit2 = mapCreator.getCoordinateFromExit (target .getCoordinates (), currentTile.getExits () [1]);
-			
+				TileScript previous = moves [moves.Count - 1];
+	
+				Coordinate destCurrentExit1 = mapCreator.getCoordinateFromExit (targetCoord, currentTile.getExits () [0]);
+				Coordinate destCurrentExit2 = mapCreator.getCoordinateFromExit (targetCoord, currentTile.getExits () [1]);
+		
+		
 				if (previous.getType () == "Start") { 
 	
-						if (destTargetExit1.getX () == previous.getCoordinates ().getX () && destTargetExit1.getY () == previous.getCoordinates ().getY ()) {
+						if (destCurrentExit1.getX () == previous.getCoordinates ().getX () && destCurrentExit1.getY () == previous.getCoordinates ().getY ()) {
 								currentTile.setFreeExit (currentTile.getExits () [1]);
 								res = true;
 					
-						} else if (destTargetExit2.getX () == previous.getCoordinates ().getX () && destTargetExit2.getY () == previous.getCoordinates ().getY ()) {
+						} else if (destCurrentExit2.getX () == previous.getCoordinates ().getX () && destCurrentExit2.getY () == previous.getCoordinates ().getY ()) {
 								res = true; 
 								currentTile.setFreeExit (currentTile.getExits () [0]);
 						}
 				
 				
 				} else {
-						/*
-							// TODO THIS NEEDS TO BE TESTED, ONLY THE FIRT CASE WAS USED SO FAR.
-							int prevExit = previous.getExits () [0];
-			
-							object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
-							foreach (object o in obj) {
-					
-									TilePrefabScript tilePrefab = (TilePrefabScript)o;
-					
-									TileScript handTile = tilePrefab.getTileScript ();
-					
-									
-									if (destPreviousExit2.getX () == handTile.getCoordinates ().getX () && destPreviousExit2.getY () == handTile.getCoordinates ().getY ()) {
-					
-											if (tilePrefab.getState () == Enums.TilePrefabState.Normal) {
-													prevExit = previous.getExits () [1];
-											}
-	
-									}
-							}
-	
-							int availableEntry = prevExit;
-							if (prevExit < 4) {
-									availableEntry += 3;
-							} else {
-									availableEntry -= 3;
-							}
-								
-	
-							if (currentTile.getExits () [0] == availableEntry || currentTile.getExits () [1] == availableEntry) {
-									res = true; 
-							}
-				*/
+				
+						if (currentTile.getExits () [0] == previous.getFreeExit () || currentTile.getExits () [1] == previous.getFreeExit ()) {
+								res = true; 
+						}
+				
 				}
 			
 				return res;
@@ -328,7 +294,7 @@ public class PuzzleManager : MonoBehaviour
 				
 				}
 		}
-	
+		
 		// TODO CHECK THE LOGIC OF THE BLOCKING OF THE BOARD
 		// SETTING THE TARGET
 		public void setFirstTarget (Coordinate targetCoordinate)
@@ -345,9 +311,8 @@ public class PuzzleManager : MonoBehaviour
 	
 								if (targetCoordinate.getX () == prefabCoord.getX () && targetCoordinate.getY () == prefabCoord.getY ()) {
 									
-										movesCoordinates.Add (targetCoordinate);
-										movesTiles.Add (tilePrefab.getTileScript ());
-										targetPosition = tilePrefab.transform.position;
+										targetCoord = prefabCoord;
+										targetPos = tilePrefab.transform.position;
 										tilePrefab.setState (Enums.TilePrefabState.Target);
 							
 								} else {
@@ -411,8 +376,8 @@ public class PuzzleManager : MonoBehaviour
 				List<TileScript> completePath = mapCreator.getCompletePath ();
 				Coordinate startTileCoordinate = completePath [0].getCoordinates ();
 	
-				movesCoordinates.Add (startTileCoordinate);
-				movesTiles.Add (completePath [0]);
+				
+				moves.Add (completePath [0]);
 	
 				int extra = oneIfEven (startTileCoordinate.getY ());
 			
