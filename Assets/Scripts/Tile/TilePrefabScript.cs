@@ -12,15 +12,15 @@ public class TilePrefabScript : MonoBehaviour
 		private int handPosition;
 		private Enums.TilePrefabState state;
 		private PuzzleManager puzzleManager;
-		
 
+		
 		void OnMouseDown ()
 		{
 
 				
 				//On the hand
 				if (state == Enums.TilePrefabState.Ready) {	
-
+						// This coordinates are used to identify the tile on the puzzle manager, nothing else.
 						puzzleManager.placeTile (getTileScript ().getCoordinates ());
 
 				}
@@ -28,8 +28,9 @@ public class TilePrefabScript : MonoBehaviour
 
 				//On the board		
 				if (state == Enums.TilePrefabState.Available) {	
-			
-						puzzleManager.setTarget (getTileScript ().getCoordinates ());
+
+						// This coordinates are used to identify the tile on the puzzle manager, nothing else.
+						puzzleManager.setFirstTarget (getTileScript ().getCoordinates ());
 			
 				}
 		}
