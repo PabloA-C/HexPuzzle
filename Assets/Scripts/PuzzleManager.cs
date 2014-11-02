@@ -13,6 +13,8 @@ public class PuzzleManager : MonoBehaviour
 		public List<Coordinate> movesCoordinates;
 		public List<TileScript> movesTiles;
 		private Vector3 targetPosition;
+		private  Coordinate tempCoord;
+		private int tempExit;
 			
 // Use this for initialization
 		void Start ()
@@ -90,7 +92,17 @@ public class PuzzleManager : MonoBehaviour
 						}
 						
 						if (!checkVictory ()) {
-								setTarget (nextCoordinate, exit);
+								
+								
+								string outCome = setTarget (nextCoordinate, exit);
+								
+								while (outCome == "Fixed") {
+										
+										outCome = setTarget (tempCoord, tempExit);
+									
+								}
+								
+	
 								//	boardState = Enums.BoardState.Free;
 				
 						} else {
@@ -102,11 +114,16 @@ public class PuzzleManager : MonoBehaviour
 		}
 		
 		// SETTING THE NEW TARGET
-		public void setTarget (Coordinate targetCoordinate, int prevExit)
+		public string setTarget (Coordinate targetCoordinate, int prevExit)
 		{
-	
+			
 				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+				bool isOutOfBounds = true;
+				
+				string outCome = "";
+		
 				foreach (object o in obj) {
+						
 						TilePrefabScript tilePrefab = (TilePrefabScript)o;
 				
 						Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
@@ -115,16 +132,57 @@ public class PuzzleManager : MonoBehaviour
 						if (!(tilePrefab.getState () == Enums.TilePrefabState.Ready) && !(tilePrefab.getState () == Enums.TilePrefabState.Blocked)) {
 	
 								if (targetCoordinate.getX () == prefabCoord.getX () && targetCoordinate.getY () == prefabCoord.getY ()) {
-	
+										isOutOfBounds = false;
+										
 										if (tilePrefab.getState () == Enums.TilePrefabState.Normal) {
-												Debug.Log ("Found one");
+												outCome = "Normal";
+												
+												movesCoordinates.Add (targetCoordinate);
+												movesTiles.Add (tilePrefab.getTileScript ());
+												targetPosition = tilePrefab.transform.position;
 												tilePrefab.setState (Enums.TilePrefabState.Target);
+													
+												Debug.Log ("Ok!");
+										} else if (tilePrefab.getState () == Enums.TilePrefabState.Fixed) {
+												outCome = "Fixed";
+												int entry = getEntry (prevExit);
+												
+												int exit1 = tilePrefab.getTileScript ().getExits () [0];
+												int exit2 = tilePrefab.getTileScript ().getExits () [1];
+						
+												if (exit1 == entry) {
+												
+														tilePrefab.getTileScript ().setFreeExit (exit2);
+														tempExit = exit2;
+							
+												} else {
+														tilePrefab.getTileScript ().setFreeExit (exit1);
+														tempExit = exit1;
+												}
+						
+												tempCoord = mapCreator.getCoordinateFromExit (prefabCoord, tempExit);
 											
-										} 
+						
+												Debug.Log ("Fixed!");
+										} else {
+												outCome = "Unsolvable";
+												boardState = Enums.BoardState.Unsolvable;
+												Debug.Log ("Unavaiable!");
+						
+										}
 								}
-						}
+						} 
+						
 				}		
-			
+				
+				if (isOutOfBounds) {
+						boardState = Enums.BoardState.Unsolvable;
+						Debug.Log ("Out");
+				}
+				
+				
+				
+				return outCome;	
 		}
 	
 	
