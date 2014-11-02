@@ -10,8 +10,7 @@ public class MapCreator
 		private int pathWidth, pathHeight, pathLenght;
 		public int floorY, ceilY, floorX, ceilX;
 		private bool pathFound = false;
-		//public float waterPercentage = 0.25f;
-		public float waterPercentage = 0.0f;
+		public float waterPercentage = 0.25f;
 		public float pathPercentage = 0.3f;
 
 		void Start ()

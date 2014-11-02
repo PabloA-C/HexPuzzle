@@ -1,10 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PuzzleManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Hand\HandPrefabScript.cs" Line="11" Column="2" />
-      <File FileName="Assets\Scripts\PuzzleManager.cs" Line="115" Column="2" />
-      <File FileName="Assets\Scripts\Tile\TilePrefabScript.cs" Line="14" Column="39" />
+      <File FileName="Assets\Scripts\PuzzleManager.cs" Line="240" Column="2" />
+      <File FileName="Assets\Scripts\Hand\HandPrefabScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Tile\TilePrefabScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Puzzle\MapCreator.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

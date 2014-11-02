@@ -21,8 +21,7 @@ public class TilePrefabScript : MonoBehaviour
 				//On the hand
 				if (state == Enums.TilePrefabState.Ready) {	
 
-						
-						//Board.placeTile(This)
+						puzzleManager.placeTile (getTileScript ().getCoordinates ());
 
 				}
 
@@ -92,6 +91,16 @@ public class TilePrefabScript : MonoBehaviour
 			
 				}
 
+
+				if (newState == Enums.TilePrefabState.Used) {
+						
+						Vector3 originalScale = transform.localScale;
+						originalScale.x = 1F; 
+						originalScale.y = 1F; 
+						transform.localScale = originalScale;
+			
+				}
+		
 				if (newState == Enums.TilePrefabState.Available) {
 						transform.Translate (new Vector3 (0, 0, -5), Space.World);
 						GetComponent<SpriteRenderer> ().sprite = HLSprites [0];
@@ -118,7 +127,13 @@ public class TilePrefabScript : MonoBehaviour
 				this.state = newState;
 				setAlpha ();
 		}
-	
+
+
+		void moveBack ()
+		{
+				transform.position = originalPosition;
+		}
+
 		void setAlpha ()
 		{
 				float a = 1f;
@@ -145,7 +160,6 @@ public class TilePrefabScript : MonoBehaviour
 				Vector3 bigScale = originalScale;
 				bigScale.x = 1.3F; 
 				bigScale.y = 1.3F; 
-				
 		
 				if (mouseEntered) {
 						transform.Translate (new Vector3 (.16f * handPosition, 0, -4), Space.World);

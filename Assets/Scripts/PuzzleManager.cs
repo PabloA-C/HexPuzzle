@@ -12,7 +12,7 @@ public class PuzzleManager : MonoBehaviour
 		public List<Coordinate> movesCoordinates;
 		public List<TileScript> movesTiles;
 		private Enums.BoardState boardState;	
-
+		private Vector3 targetPosition;
 		
 		// Use this for initialization
 		void Start ()
@@ -59,52 +59,87 @@ public class PuzzleManager : MonoBehaviour
 		// SETTING THE TARGET
 		public void setTarget (Coordinate targetCoordinate)
 		{
-				
-				boardState = Enums.BoardState.Blocked;
+				if (boardState == Enums.BoardState.Free) {
 			
-				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
-				foreach (object o in obj) {
-						TilePrefabScript tilePrefab = (TilePrefabScript)o;
+						boardState = Enums.BoardState.Blocked;
 			
-						Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
+						object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+						foreach (object o in obj) {
+								TilePrefabScript tilePrefab = (TilePrefabScript)o;
+			
+								Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
 
 
-						//TODO (esto de momento ha sido por poner, nada muy pensado
-						if (tilePrefab.getState () == Enums.TilePrefabState.Target) {
+								// TODO (esto de momento ha sido por poner, nada muy pensado
+								if (tilePrefab.getState () == Enums.TilePrefabState.Target) {
 
-								tilePrefab.setState (Enums.TilePrefabState.Used);
+										tilePrefab.setState (Enums.TilePrefabState.Used);
 
-						}
+								}
 
-						// IF TARGET = FIXED ->get exit ->...-> new target.
+								// TODO
+								// IF TARGET = FIXED ->get exit ->...-> new target.
+								// IF THERE'S NO POSSIBLE TARGET. DONT HAVE ANY.
 			    
-			    
-						if (tilePrefab.getState () == Enums.TilePrefabState.Available || tilePrefab.getState () == Enums.TilePrefabState.Normal) {
+								if (tilePrefab.getState () == Enums.TilePrefabState.Available || tilePrefab.getState () == Enums.TilePrefabState.Normal) {
 
-								if (targetCoordinate.getX () == prefabCoord.getX () && targetCoordinate.getY () == prefabCoord.getY ()) {
+										if (targetCoordinate.getX () == prefabCoord.getX () && targetCoordinate.getY () == prefabCoord.getY ()) {
 								
-										movesCoordinates.Add (targetCoordinate);
-										movesTiles.Add (tilePrefab.getTileScript ());
-
-										tilePrefab.setState (Enums.TilePrefabState.Target);
+												movesCoordinates.Add (targetCoordinate);
+												movesTiles.Add (tilePrefab.getTileScript ());
+												targetPosition = tilePrefab.transform.position;
+												tilePrefab.setState (Enums.TilePrefabState.Target);
 
 						
-								} else {
-										tilePrefab.setState (Enums.TilePrefabState.Normal);
+										} else {
+												tilePrefab.setState (Enums.TilePrefabState.Normal);
+										}
 								}
-						}
 				
 			
+						}
+
+						enableHand ();
+
+						boardState = Enums.BoardState.Free;
 				}
 
-				enableHand ();
-
-				boardState = Enums.BoardState.Free;
 		}
+		// PLACING THE TILE
 
+		public void placeTile (Coordinate readyTile)
+		{
+				if (boardState == Enums.BoardState.Free) {
+						boardState = Enums.BoardState.Blocked;
+			
+						object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+						foreach (object o in obj) {
+								
+								TilePrefabScript tilePrefab = (TilePrefabScript)o;
+								Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
+
+
+								if (tilePrefab.getState () == Enums.TilePrefabState.Ready) {
+
+										if (readyTile.getX () == prefabCoord.getX () && readyTile.getY () == prefabCoord.getY ()) {
+
+												tilePrefab.setState (Enums.TilePrefabState.Used);
+												tilePrefab.transform.position = targetPosition;
+												
+										}
+								}
+				
+						}
+			
+						boardState = Enums.BoardState.Free;
+				}
+		}
+	
+
+		//TODO CHECK EVERY TIME YOU ITERATE PREFABS THAT YOU'RE WORKING ON THE MAP OR HAND SET ONLY
 
 		// ENABLING AVAILABLE HAND TILES
-		void 	enableHand ()
+		void enableHand ()
 		{
 
 				TileScript target = movesTiles [movesTiles.Count - 1];
@@ -117,22 +152,25 @@ public class PuzzleManager : MonoBehaviour
 						TileScript handTile = tilePrefab.getTileScript ();
 			                
 
-						if (isReady (handTile)) {
+
+						if (tilePrefab.getState () == Enums.TilePrefabState.Ready || tilePrefab.getState () == Enums.TilePrefabState.Blocked) {
+
+								if (isReady (handTile)) {
 
 				 
-								if (tilePrefab.getState () == Enums.TilePrefabState.Blocked) {
+										if (tilePrefab.getState () == Enums.TilePrefabState.Blocked) {
 					
-										tilePrefab.setState (Enums.TilePrefabState.Ready);
+												tilePrefab.setState (Enums.TilePrefabState.Ready);
 						
-								} 
+										} 
 				
-						} else if (tilePrefab.getState () == Enums.TilePrefabState.Ready) {
+								} else if (tilePrefab.getState () == Enums.TilePrefabState.Ready) {
 				
-								tilePrefab.setState (Enums.TilePrefabState.Blocked);
+										tilePrefab.setState (Enums.TilePrefabState.Blocked);
 				
-						}
+								}
 
-						
+						}
 				}
 		
 		
@@ -179,36 +217,64 @@ public class PuzzleManager : MonoBehaviour
 				int exit = 0;
 		
 				TileScript previous = movesTiles [movesTiles.Count - 2];
+					
+				// We suppose the open exit on the prev tile is the first one and check if it's actually the second or not.
+				// Thus, we wont be using destPreviousExit1
+				//Coordinate destPreviousExit1 = mapCreator.getCoordinateFromExit (previous .getCoordinates (), previous.getExits () [0]);
+				Coordinate destPreviousExit2 = mapCreator.getCoordinateFromExit (previous .getCoordinates (), previous.getExits () [1]);
+
+
 				TileScript target = movesTiles [movesTiles.Count - 1];
+				Coordinate destTargetExit1 = mapCreator.getCoordinateFromExit (target .getCoordinates (), currentTile.getExits () [0]);
+				Coordinate destTargetExit2 = mapCreator.getCoordinateFromExit (target .getCoordinates (), currentTile.getExits () [1]);
 			
-				if (movesTiles [movesTiles.Count - 2].getType () == "Start") {
-			
-						Coordinate destExit1 = mapCreator.getCoordinateFromExit (target .getCoordinates (), currentTile.getExits () [0]);
-						Coordinate destExit2 = mapCreator.getCoordinateFromExit (target .getCoordinates (), currentTile.getExits () [1]);
+				if (previous.getType () == "Start") { 
+		
 				
-						if (destExit1.getX () == previous.getCoordinates ().getX () && destExit1.getY () == previous.getCoordinates ().getY ()) {
+						if (destTargetExit1.getX () == previous.getCoordinates ().getX () && destTargetExit1.getY () == previous.getCoordinates ().getY ()) {
 								res = true;
 							
-						} else if (destExit2.getX () == previous.getCoordinates ().getX () && destExit2.getY () == previous.getCoordinates ().getY ()) {
-								res = true;
+						} else if (destTargetExit2.getX () == previous.getCoordinates ().getX () && destTargetExit2.getY () == previous.getCoordinates ().getY ()) {
+								res = true; 
 						}
 				
 			
 				} else {
-			
-			
-			
+
+						// TODO THIS NEEDS TO BE TESTED, ONLY THE FIRT CASE WAS USED SO FAR.
+						int prevExit = previous.getExits () [0];
+		
+						object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+						foreach (object o in obj) {
+				
+								TilePrefabScript tilePrefab = (TilePrefabScript)o;
+				
+								TileScript handTile = tilePrefab.getTileScript ();
+				
+								
+								if (destPreviousExit2.getX () == handTile.getCoordinates ().getX () && destPreviousExit2.getY () == handTile.getCoordinates ().getY ()) {
+				
+										if (tilePrefab.getState () == Enums.TilePrefabState.Normal) {
+												prevExit = previous.getExits () [1];
+										}
+
+								}
+						}
+
+						int availableEntry = prevExit;
+						if (prevExit < 4) {
+								availableEntry += 3;
+						} else {
+								availableEntry -= 3;
+						}
+							
+
+						if (currentTile.getExits () [0] == availableEntry || currentTile.getExits () [1] == availableEntry) {
+								res = true; 
+						}
 			
 				}
-		
-		
-		
-		
-		
-				/* 1º Get Target exit and get the opposite exit
-						 * 2º Compare with any of the exits on the prefab.
-				*/
-		
+	
 				return res;
 		
 		}
