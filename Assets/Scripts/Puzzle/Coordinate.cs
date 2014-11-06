@@ -41,5 +41,15 @@ public class Coordinate
 				return y;
 		}
 
-
+		public bool equals (Coordinate coord)
+		{
+				bool res = false;
+		
+				if (x == coord.getX () && y == coord.getY ()) {
+						res = true;
+		
+				}
+				return res;
+		
+		}
 }

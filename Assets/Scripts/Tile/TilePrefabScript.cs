@@ -10,7 +10,7 @@ public class TilePrefabScript : MonoBehaviour
 		private Vector3 originalPosition;
 		private Vector3 position;
 		private int handPosition;
-		private Enums.TilePrefabState state;
+		public Enums.TilePrefabState state;
 		private PuzzleManager puzzleManager;
 
 		
@@ -21,8 +21,8 @@ public class TilePrefabScript : MonoBehaviour
 				//On the hand
 				if (state == Enums.TilePrefabState.Ready) {	
 						// This coordinates are used to identify the tile on the puzzle manager, nothing else.
-						puzzleManager.placeTile (getTileScript ().getCoordinates ());
-
+					
+						puzzleManager.turn (getTileScript ().getCoordinates ());
 				}
 
 

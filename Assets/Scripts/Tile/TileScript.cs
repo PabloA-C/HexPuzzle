@@ -1,4 +1,4 @@
-﻿	using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 	
@@ -138,7 +138,6 @@ public class TileScript
 				this.coordinates = coordinates;
 		}
 	
-	
 		public int getRotation ()
 		{
 				return rotation;
@@ -167,7 +166,12 @@ public class TileScript
 	
 		public void setFreeExit (int freeExit)
 		{
-				this.freeExit = freeExit;
+		
+				if (freeExit == 1) {
+						this.freeExit = exit1;
+				} else {
+						this.freeExit = exit2;
+				}
 	
 		}
 	
