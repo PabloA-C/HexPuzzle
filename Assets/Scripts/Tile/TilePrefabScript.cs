@@ -22,7 +22,8 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Ready) {	
 						// This coordinates are used to identify the tile on the puzzle manager, nothing else.
 					
-						puzzleManager.turn (getTileScript ().getCoordinates ());
+						tileScript.setCoordinates (new Coordinate (-1, -1));
+						puzzleManager.turn ();
 				}
 
 
@@ -117,7 +118,6 @@ public class TilePrefabScript : MonoBehaviour
 
 
 				if (newState == Enums.TilePrefabState.Target) {
-						hover (false);
 						transform.Translate (new Vector3 (0, 0, 5), Space.World);
 						GetComponent<SpriteRenderer> ().sprite = HLSprites [1];
 			
@@ -151,7 +151,7 @@ public class TilePrefabScript : MonoBehaviour
 				renderer.material.color = color;
 		}
 	
-		void hover (bool mouseEntered)
+		public void hover (bool mouseEntered)
 		{
 	
 				Vector3 originalScale = transform.localScale;

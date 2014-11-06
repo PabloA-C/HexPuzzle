@@ -9,17 +9,11 @@ public class PuzzleManager : MonoBehaviour
 		private MapCreator mapCreator;
 		private HandPrefabScript hand;
 		public int difficulty = 3;
-		private Enums.BoardState boardState;
 		public List<Coordinate> startTilesCoordinates;
 		public List<TileScript> moves;
 		private Coordinate targetCoord;
-		private TileScript targetEntr;
+		private int targetEntr;
 		private Vector3 targetPos;
-		
-		// This will be used to store the location of fixed tiles.
-		private TileScript tempTile;
-		private  Coordinate tempCoord;
-		private int tempExit;
 			
 // Use this for initialization
 		void Start ()
@@ -42,8 +36,6 @@ public class PuzzleManager : MonoBehaviour
 				// Setting up the moves storing.
 				moves = new System.Collections.Generic.List<TileScript> ();
 			
-				
-			
 				// Starting the game.
 				startGame ();
 	
@@ -53,68 +45,175 @@ public class PuzzleManager : MonoBehaviour
 		void startGame ()
 		{
 				// Finding the avaiable starting tiles.
-				
-				
-		
+			
 				storeStartTiles ();
 				enableStartTiles ();
-				
-				boardState = Enums.BoardState.Free;
 		}
 
-		public void turn (Coordinate handTileCoordinate)
+		public void turn ()
 		{
-				boardState = Enums.BoardState.Blocked;
 				//	Moving the selected tile into position
-				//placeTile ();
+				placeTile ();
 				//	Finding the next target
-				//findNextTarget ();
+				findNextTarget (targetCoord, moves [moves.Count - 1].getFreeExit ());
+				
+				Debug.Log (targetCoord.getX () + " - " + targetCoord.getY ());
+				
+				if (!(targetCoord.getX () == -1)) {
+					
+						enableHand ();
+				} else {
+						Debug.Log ("No way!");
+						disableHand ();
+				}
+				
 				// Preparing the board and the hand.
-				//prepareBoardAndHand ();
-				boardState = Enums.BoardState.Free;
+				
+				
 		}
 
 
-		/*public bool isReady (TileScript currentTile, TileScript previous)
+
+	
+		void placeTile ()
 		{
-		
-				bool res = false;
-				int exit = 0;
-	
-				Coordinate destCurrentExit1 = mapCreator.getCoordinateFromExit (targetCoord, currentTile.getExits () [0]);
-				Coordinate destCurrentExit2 = mapCreator.getCoordinateFromExit (targetCoord, currentTile.getExits () [1]);
-		
-		
-				if (previous.getType () == "Start") { 
-	
-						if (destCurrentExit1.getX () == previous.getCoordinates ().getX () && destCurrentExit1.getY () == previous.getCoordinates ().getY ()) {
-								currentTile.setFreeExit (currentTile.getExits () [1]);
-								res = true;
-					
-						} else if (destCurrentExit2.getX () == previous.getCoordinates ().getX () && destCurrentExit2.getY () == previous.getCoordinates ().getY ()) {
-								res = true; 
-								currentTile.setFreeExit (currentTile.getExits () [0]);
+
+				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+				foreach (object o in obj) {
+						TilePrefabScript tilePrefab = (TilePrefabScript)o;
+						Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
+						TileScript prefabScript = tilePrefab.getTileScript ();
+			
+			
+						if (prefabCoord.getX () == -1 && prefabCoord.getY () == -1) {
+								tilePrefab.transform.position = targetPos;
+								prefabScript.setCoordinates (targetCoord);
+								tilePrefab.setState (Enums.TilePrefabState.Used);
+								moves.Add (prefabScript);
+				
+						} else if (tilePrefab.getState () == Enums.TilePrefabState.Ready) {
+			
+								tilePrefab.setState (Enums.TilePrefabState.Blocked);
 						}
 			
-				} else {
-						int entry = getEntry (previous.getFreeExit ());
-						if (currentTile.getExits () [0] == entry) {
-								currentTile.setFreeExit (currentTile.getExits () [1]);
-								res = true;
-						} else if (currentTile.getExits () [1] == entry) {
-								currentTile.setFreeExit (currentTile.getExits () [1]);
-								res = true;
-						}
 			
 				}
-			
-				return res;
-			
+		
 		}
-	*/
+   		
+		Coordinate findNextTarget (Coordinate coord, int prevExit)
+		{
+				Coordinate res = new Coordinate (-1, -1);
+		
+				Coordinate destCoord = mapCreator.getCoordinateFromExit (coord, prevExit);
+				
+				
+				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+				foreach (object o in obj) {
+						TilePrefabScript tilePrefab = (TilePrefabScript)o;
+						Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
+						TileScript prefabScript = tilePrefab.getTileScript ();
+			
+			
+						if (prefabCoord.equals (destCoord)) {
+				
+								if (tilePrefab.getState () == Enums.TilePrefabState.Normal) {
+										targetCoord = prefabCoord;
+										targetPos = tilePrefab.transform.position;
+										targetEntr = getEntry (prevExit);
+																	
+										tilePrefab.setState (Enums.TilePrefabState.Target);
+					
+								} else if (tilePrefab.getState () == Enums.TilePrefabState.Fixed) {
+								
+										if (prefabScript.getType () == "Finish") {
+												//TODO Check if finished.
+										} else if (!(prefabScript.getType () == "Start")) {
+								
+												int entry = getEntry (prevExit);
+												
+												bool isValid = false;
+												int exit = 0;
+						
+												if (prefabScript.getExits () [0] == entry) {
+														isValid = true;
+														exit = prefabScript.getExits () [1];
+											
+												} else if (prefabScript.getExits () [1] == entry) {
+														isValid = true;
+														exit = prefabScript.getExits () [0];
+												}
+												
+												if (isValid) {
+												
+														res = findNextTarget (prefabCoord, exit);
+												
+												}
+							
+										}
+				
+								}
+					
+								
+						}
+			
+		
+		
+				}
+				return res;
+		}
+
+		void enableHand ()
+		{
+		
+				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+				foreach (object o in obj) {
+						TilePrefabScript tilePrefab = (TilePrefabScript)o;
+						Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
+						TileScript prefabScript = tilePrefab.getTileScript ();
+			
+						if (tilePrefab.getState () == Enums.TilePrefabState.Blocked) {
+								bool isValid = false;
+								if (prefabScript.getExits () [0] == targetEntr) {
+										isValid = true;
+										prefabScript.setFreeExit (2);
+							
+								} else if (prefabScript.getExits () [1] == targetEntr) {
+										isValid = true;
+										prefabScript.setFreeExit (1);
+								}
+								if (isValid) {
+										tilePrefab.setState (Enums.TilePrefabState.Ready);
+								}
+				
+						}
+			
+			
+				}
+		
+		
+		
+		}
 	
-	
-	
+		void disableHand ()
+		{
+				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+				foreach (object o in obj) {
+						TilePrefabScript tilePrefab = (TilePrefabScript)o;
+						Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
+						TileScript prefabScript = tilePrefab.getTileScript ();
+			
+						if (tilePrefab.getState () == Enums.TilePrefabState.Ready) {
+							 
+								tilePrefab.setState (Enums.TilePrefabState.Blocked);
+								
+				
+						}
+			
+			
+				}
+		}
+		
 		//First turn logic.
 	
 		void  storeStartTiles ()
@@ -197,8 +296,11 @@ public class PuzzleManager : MonoBehaviour
 						if (tilePrefab.getState () == Enums.TilePrefabState.Available) {
 								if (targetCoordinate.equals (prefabCoord)) {
 										targetCoord = prefabCoord;
-										targetPos = tilePrefab.transform.position;
+										targetPos = tilePrefab.transform.position;	
+										tilePrefab.hover (false);									
+										tilePrefab.transform.Translate (new Vector3 (0, 0, 5), Space.World);
 										tilePrefab.setState (Enums.TilePrefabState.Target);
+
 								} else {
 										tilePrefab.setState (Enums.TilePrefabState.Normal);
 								}
@@ -241,22 +343,38 @@ public class PuzzleManager : MonoBehaviour
 								}
 						}
 				}
-				
-		
-				boardState = Enums.BoardState.Free;
+			
 		}
 			
 		int getEntry (int prevExit)
 		{
 	
-				int availableEntry = 0;
-				if (prevExit > 3) {
-						availableEntry = prevExit - 3;
-				} else {
-						availableEntry = prevExit + 3;
+				int res = 0;
+				
+				switch (prevExit) {
+				case 1:
+						return 4;
+						break;
+				case 2:
+						return 5;
+						break;
+				case 3:
+						return 6;
+						break;
+				case 4:
+						return 1;
+						break;
+				case 5:
+						return 2;
+						break;
+				case 6:
+						return 3;
+						break;
+			
+			
 				}
 		
-				return availableEntry;
+				return res;
 		}
 			
 		
