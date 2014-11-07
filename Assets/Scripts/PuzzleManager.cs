@@ -57,22 +57,22 @@ public class PuzzleManager : MonoBehaviour
 				//	Finding the next target
 				Coordinate result = findNextTarget (targetCoord, moves [moves.Count - 1].getFreeExit ());	
 				
-				if (!(result.getX () == -1)) {
-					
-						enableHand ();
-						
-				} else {
+				
+				if (result.getX () == -2) {
+		
+						checkVictory ();
+		
+				} else if (result.getX () == -1) {
 						Debug.Log ("No way!");
 						disableHand ();
+				} else {
+				
+						enableHand ();
 				}
-				
-				// Preparing the board and the hand.
-				
+		
+	
 				
 		}
-
-
-
 	
 		void placeTile ()
 		{
@@ -126,7 +126,7 @@ public class PuzzleManager : MonoBehaviour
 								} else if (tilePrefab.getState () == Enums.TilePrefabState.Fixed) {
 								
 										if (prefabScript.getType () == "Finish") {
-												//TODO Check if finished.
+												res = new Coordinate (-2, -2);
 										} else if (!(prefabScript.getType () == "Start")) {
 								
 												int entry = getEntry (prevExit);
@@ -212,6 +212,38 @@ public class PuzzleManager : MonoBehaviour
 			
 				}
 		}
+		
+		void checkVictory ()
+		{
+				bool res = false;
+				
+				int handSize = 0;
+				
+				switch (difficulty) {
+				case 1:
+						handSize = 8;
+						break;
+				case 2:
+						handSize = 16;
+						break;
+				case 3:
+						handSize = 26;
+						break;
+
+				}
+		
+				if (moves.Count == handSize) {
+			
+						Debug.Log ("WON!!!!");
+				} else {
+						Debug.Log ("No way");
+						disableHand ();
+				}
+			
+	
+		}
+		
+		
 		
 		//First turn logic.
 	
