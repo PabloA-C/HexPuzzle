@@ -8,16 +8,23 @@ public class PuzzleManager : MonoBehaviour
 		private BoardManager boardManager;
 		private MapCreator mapCreator;
 		private HandPrefabScript hand;
-		public int difficulty = 3;
+		private int difficulty;
 		public List<Coordinate> startTilesCoordinates;
 		public List<TileScript> moves;
 		private Coordinate targetCoord;
 		private int targetEntr;
 		private Vector3 targetPos;
 			
+			
+	
+			
 // Use this for initialization
 		void Start ()
 		{
+				difficulty = GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().getDifficulty ();
+		
+				Debug.Log (difficulty);
+		
 				// Generating the random map with a given difficulty.
 				mapCreator = new MapCreator (difficulty);
 	
