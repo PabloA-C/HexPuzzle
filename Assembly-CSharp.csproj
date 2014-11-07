@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Enums\Enums.cs" />
      <Compile Include="Assets\Scripts\Hand\HandPrefabScript.cs" />
+     <Compile Include="Assets\Scripts\Menus\DifficultyButtonScript.cs" />
      <Compile Include="Assets\Scripts\Puzzle\AuxMethods.cs" />
      <Compile Include="Assets\Scripts\Puzzle\BoardManager.cs" />
      <Compile Include="Assets\Scripts\Puzzle\Coordinate.cs" />
