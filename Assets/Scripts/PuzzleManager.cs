@@ -55,13 +55,12 @@ public class PuzzleManager : MonoBehaviour
 				//	Moving the selected tile into position
 				placeTile ();
 				//	Finding the next target
-				findNextTarget (targetCoord, moves [moves.Count - 1].getFreeExit ());
+				Coordinate result = findNextTarget (targetCoord, moves [moves.Count - 1].getFreeExit ());	
 				
-				Debug.Log (targetCoord.getX () + " - " + targetCoord.getY ());
-				
-				if (!(targetCoord.getX () == -1)) {
+				if (!(result.getX () == -1)) {
 					
 						enableHand ();
+						
 				} else {
 						Debug.Log ("No way!");
 						disableHand ();
@@ -121,7 +120,7 @@ public class PuzzleManager : MonoBehaviour
 										targetCoord = prefabCoord;
 										targetPos = tilePrefab.transform.position;
 										targetEntr = getEntry (prevExit);
-																	
+										res = targetCoord;						
 										tilePrefab.setState (Enums.TilePrefabState.Target);
 					
 								} else if (tilePrefab.getState () == Enums.TilePrefabState.Fixed) {
