@@ -166,12 +166,10 @@ public class TilePrefabScript : MonoBehaviour
 		
 				if (mouseEntered) {
 						transform.Translate (new Vector3 (.16f * handPosition, 0, -4), Space.World);
-						GetComponent<Transform> ().localScale.Set (1.2f, 1.2f, 1f);
 						transform.localScale = bigScale;
 						
 				} else {
 						transform.Translate (new Vector3 (-.16f * handPosition, 0, 4), Space.World);
-						GetComponent<Transform> ().localScale.Set (1f, 1f, 1f);
 						transform.localScale = originalScale;
 						
 				}

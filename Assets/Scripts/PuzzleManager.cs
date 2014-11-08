@@ -22,6 +22,38 @@ public class PuzzleManager : MonoBehaviour
 		void Start ()
 		{
 				difficulty = GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().getDifficulty ();
+			
+				GameObject.Find ("NormalButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Blocked);
+				GameObject.Find ("HardButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Blocked);
+				GameObject.Find ("ExpertButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Blocked);
+				GameObject.Find ("Back").GetComponent<BackScript> ().setState (Enums.SelectorState.Blocked);
+		
+				Vector3 scale = GameObject.Find ("Selector").GetComponent<Transform> ().localScale;
+				scale.x = 0.5F; 
+				scale.y = 0.5F; 
+				GameObject.Find ("Selector").GetComponent<Transform> ().localScale = scale;
+			
+				switch (difficulty) {
+				case 1:
+				
+						GameObject.Find ("Selector").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
+						GameObject.Find ("Quit").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
+						GameObject.Find ("Back").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
+						break;
+				case 2:
+						GameObject.Find ("Selector").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
+						GameObject.Find ("Quit").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
+						GameObject.Find ("Back").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
+						break;
+				case 3:
+						GameObject.Find ("Selector").GetComponent<Transform> ().Translate (new Vector3 (0, 4.8F, 0), Space.World);
+						GameObject.Find ("Quit").GetComponent<Transform> ().Translate (new Vector3 (0, 4.8f, 0), Space.World);
+						GameObject.Find ("Back").GetComponent<Transform> ().Translate (new Vector3 (0, 4.8f, 0), Space.World);
+						break;
+				
+				
+				}
+		
 		
 				Debug.Log (difficulty);
 		
@@ -83,7 +115,7 @@ public class PuzzleManager : MonoBehaviour
 	
 		void placeTile ()
 		{
-
+		
 				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
 				foreach (object o in obj) {
 						TilePrefabScript tilePrefab = (TilePrefabScript)o;
@@ -240,8 +272,9 @@ public class PuzzleManager : MonoBehaviour
 				}
 		
 				if (moves.Count == handSize) {
-			
-						Debug.Log ("WON!!!!");
+						GameObject.Find ("NormalButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Free);
+						GameObject.Find ("HardButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Free);
+						GameObject.Find ("ExpertButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Free);
 				} else {
 						Debug.Log ("No way");
 						disableHand ();
@@ -338,6 +371,7 @@ public class PuzzleManager : MonoBehaviour
 										tilePrefab.hover (false);									
 										tilePrefab.transform.Translate (new Vector3 (0, 0, 5), Space.World);
 										tilePrefab.setState (Enums.TilePrefabState.Target);
+										GameObject.Find ("Back").GetComponent<BackScript> ().setState (Enums.SelectorState.Free);
 
 								} else {
 										tilePrefab.setState (Enums.TilePrefabState.Normal);

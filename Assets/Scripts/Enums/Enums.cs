@@ -20,11 +20,11 @@ public class Enums : MonoBehaviour
 			}
 		;
 		
-		public enum BoardState
+		public enum SelectorState
 		{
-				Blocked,
+				
 				Free,
-				Unsolvable
+				Blocked
 					
 						
 			}
