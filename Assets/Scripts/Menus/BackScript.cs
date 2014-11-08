@@ -9,7 +9,8 @@ public class BackScript : MonoBehaviour
 		void OnMouseDown ()
 		{
 				if (state == Enums.SelectorState.Free) {
-			
+				
+						GameObject.Find ("Puzzle").GetComponent<PuzzleManager> ().backStep ();
 						
 				}
 		

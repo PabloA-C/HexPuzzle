@@ -275,15 +275,62 @@ public class PuzzleManager : MonoBehaviour
 						GameObject.Find ("NormalButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Free);
 						GameObject.Find ("HardButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Free);
 						GameObject.Find ("ExpertButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Free);
+						GameObject.Find ("Back").GetComponent<BackScript> ().setState (Enums.SelectorState.Blocked);
+						
 				} else {
 						Debug.Log ("No way");
 						disableHand ();
 				}
-			
-	
+		
 		}
 		
 		
+		public void backStep ()
+		{
+		
+				Debug.Log ("Back!");
+				if (moves.Count == 0) {
+				
+						backToStart ();
+						
+				} else {
+						backNormal ();
+				}
+		}
+		
+		void backToStart ()
+		{
+				// First target selection step.
+				Debug.Log ("First target");
+				
+				
+				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+				foreach (object o in obj) {
+						TilePrefabScript tilePrefab = (TilePrefabScript)o;
+			
+						Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
+			
+			
+						if (tilePrefab.getState () == Enums.TilePrefabState.Target) {
+								tilePrefab.transform.Translate (new Vector3 (0, 0, -5), Space.World);
+								tilePrefab.setState (Enums.TilePrefabState.Normal);
+						} 
+				}
+				
+				disableHand ();
+				enableStartTiles ();
+		}
+		
+		void backNormal ()
+		{
+				// Last tile selection step.
+				Debug.Log ("Tile selection");
+		}
+	
+		void back3 ()
+		{
+				Debug.Log ("Restart!");
+		}
 		
 		//First turn logic.
 	
@@ -368,8 +415,7 @@ public class PuzzleManager : MonoBehaviour
 								if (targetCoordinate.equals (prefabCoord)) {
 										targetCoord = prefabCoord;
 										targetPos = tilePrefab.transform.position;	
-										tilePrefab.hover (false);									
-										tilePrefab.transform.Translate (new Vector3 (0, 0, 5), Space.World);
+										tilePrefab.hover (false);							
 										tilePrefab.setState (Enums.TilePrefabState.Target);
 										GameObject.Find ("Back").GetComponent<BackScript> ().setState (Enums.SelectorState.Free);
 
