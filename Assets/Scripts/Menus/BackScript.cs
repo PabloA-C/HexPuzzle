@@ -9,7 +9,7 @@ public class BackScript : MonoBehaviour
 		void OnMouseDown ()
 		{
 				if (state == Enums.SelectorState.Free) {
-				
+						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playPlacement ();
 						GameObject.Find ("Puzzle").GetComponent<PuzzleManager> ().backStep ();
 						
 				}
@@ -19,7 +19,7 @@ public class BackScript : MonoBehaviour
 		void OnMouseEnter ()
 		{
 				if (state == Enums.SelectorState.Free) {
-						
+						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playSelection ();
 						hover (true);
 				}
 		}

@@ -7,8 +7,7 @@ public class TilePrefabScript : MonoBehaviour
 		private Sprite[] TileSprites;
 		private Sprite[] HLSprites;
 		private TileScript tileScript;
-		private Vector3 originalPosition;
-		private Vector3 position;
+		public Vector3 originalPosition;
 		private int handPosition;
 		public Enums.TilePrefabState state;
 		private PuzzleManager puzzleManager;
@@ -22,6 +21,7 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Ready) {	
 						// This coordinates are used to identify the tile on the puzzle manager, nothing else.
 						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playPlacement ();
+						hover (false);
 						tileScript.setCoordinates (new Coordinate (-1, -1));
 						puzzleManager.turn ();
 				}
@@ -32,6 +32,7 @@ public class TilePrefabScript : MonoBehaviour
 
 						// This coordinates are used to identify the tile on the puzzle manager, nothing else.
 						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playPlacement ();
+						transform.Translate (new Vector3 (0, 0, 5), Space.World);
 						puzzleManager.setFirstTarget (getTileScript ().getCoordinates ());
 			
 				}
@@ -120,7 +121,6 @@ public class TilePrefabScript : MonoBehaviour
 
 
 				if (newState == Enums.TilePrefabState.Target) {
-						transform.Translate (new Vector3 (0, 0, 5), Space.World);
 						GetComponent<SpriteRenderer> ().sprite = HLSprites [1];
 			
 				}
@@ -131,13 +131,23 @@ public class TilePrefabScript : MonoBehaviour
 				setAlpha ();
 		}
 
-
-		void moveBack ()
+		public void setOriginalPos (Vector3 originalPosition)
 		{
+				
+				Vector3 pos = originalPosition;
+
+				this.originalPosition = pos;
+				
+				
+		}
+
+		public void moveBack ()
+		{
+					
 				transform.position = originalPosition;
 		}
 
-		void setAlpha ()
+		public void setAlpha ()
 		{
 				float a = 1f;
 		
@@ -187,8 +197,7 @@ public class TilePrefabScript : MonoBehaviour
 		
 				TileSprites = Resources.LoadAll<Sprite> (@"Sprites/TileSheet");
 				HLSprites = Resources.LoadAll<Sprite> (@"Sprites/HighLights");
-				originalPosition = transform.position;
-				position = transform.position;
+
 				GetComponent<SpriteRenderer> ().sprite = TileSprites [getTypeIndex (tile.getType ())];
 				transform.Rotate (0, 0, tile.getRotation () * 60, Space.World);
 				setAlpha ();
@@ -202,10 +211,10 @@ public class TilePrefabScript : MonoBehaviour
 				this.tileScript = tile;
 				this.puzzleManager = GameObject.Find ("Puzzle").GetComponent<PuzzleManager> ();
 				setState (Enums.TilePrefabState.Fixed);
+				
 				TileSprites = Resources.LoadAll<Sprite> (@"Sprites/TileSheet");
 				HLSprites = Resources.LoadAll<Sprite> (@"Sprites/HighLights");
-				originalPosition = transform.position;
-				position = transform.position;
+				
 				GetComponent<SpriteRenderer> ().sprite = TileSprites [getTypeIndex (tile.getType ())];
 				transform.Rotate (0, 0, tile.getRotation () * 60, Space.World);
 		

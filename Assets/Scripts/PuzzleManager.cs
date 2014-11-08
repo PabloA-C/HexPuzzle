@@ -14,7 +14,7 @@ public class PuzzleManager : MonoBehaviour
 		private Coordinate targetCoord;
 		private int targetEntr;
 		private Vector3 targetPos;
-			
+		private bool isBlocked = false;
 			
 	
 			
@@ -53,9 +53,6 @@ public class PuzzleManager : MonoBehaviour
 				
 				
 				}
-		
-		
-				Debug.Log (difficulty);
 		
 				// Generating the random map with a given difficulty.
 				mapCreator = new MapCreator (difficulty);
@@ -102,7 +99,7 @@ public class PuzzleManager : MonoBehaviour
 						checkVictory ();
 		
 				} else if (result.getX () == -1) {
-						Debug.Log ("No way!");
+						isBlocked = true;
 						disableHand ();
 				} else {
 				
@@ -124,7 +121,13 @@ public class PuzzleManager : MonoBehaviour
 			
 			
 						if (prefabCoord.getX () == -1 && prefabCoord.getY () == -1) {
-								tilePrefab.transform.position = targetPos;
+								
+								tilePrefab.setOriginalPos (tilePrefab.transform.position);
+								
+								Vector3 newPos = targetPos;
+								newPos.Set (targetPos.x, targetPos.y, tilePrefab.originalPosition.z);
+								tilePrefab.transform.position = newPos;
+								tilePrefab.transform.Translate (new Vector3 (0, 0, -5), Space.World);
 								prefabScript.setCoordinates (targetCoord);
 								tilePrefab.setState (Enums.TilePrefabState.Used);
 								moves.Add (prefabScript);
@@ -203,7 +206,7 @@ public class PuzzleManager : MonoBehaviour
 
 		void enableHand ()
 		{
-		
+				
 				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
 				foreach (object o in obj) {
 						TilePrefabScript tilePrefab = (TilePrefabScript)o;
@@ -211,6 +214,7 @@ public class PuzzleManager : MonoBehaviour
 						TileScript prefabScript = tilePrefab.getTileScript ();
 			
 						if (tilePrefab.getState () == Enums.TilePrefabState.Blocked) {
+								Debug.Log ("Checking one");
 								bool isValid = false;
 								if (prefabScript.getExits () [0] == targetEntr) {
 										isValid = true;
@@ -243,12 +247,10 @@ public class PuzzleManager : MonoBehaviour
 			
 						if (tilePrefab.getState () == Enums.TilePrefabState.Ready) {
 							 
-								tilePrefab.setState (Enums.TilePrefabState.Blocked);
-								
+								tilePrefab.setState (Enums.TilePrefabState.Blocked);			
 				
 						}
-			
-			
+				
 				}
 		}
 		
@@ -278,7 +280,6 @@ public class PuzzleManager : MonoBehaviour
 						GameObject.Find ("Back").GetComponent<BackScript> ().setState (Enums.SelectorState.Blocked);
 						
 				} else {
-						Debug.Log ("No way");
 						disableHand ();
 				}
 		
@@ -288,7 +289,6 @@ public class PuzzleManager : MonoBehaviour
 		public void backStep ()
 		{
 		
-				Debug.Log ("Back!");
 				if (moves.Count == 0) {
 				
 						backToStart ();
@@ -300,9 +300,6 @@ public class PuzzleManager : MonoBehaviour
 		
 		void backToStart ()
 		{
-				// First target selection step.
-				Debug.Log ("First target");
-				
 				
 				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
 				foreach (object o in obj) {
@@ -310,10 +307,8 @@ public class PuzzleManager : MonoBehaviour
 			
 						Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
 			
-			
 						if (tilePrefab.getState () == Enums.TilePrefabState.Target) {
-								tilePrefab.transform.Translate (new Vector3 (0, 0, -5), Space.World);
-								tilePrefab.setState (Enums.TilePrefabState.Normal);
+								tilePrefab.state = Enums.TilePrefabState.Normal;
 						} 
 				}
 				
@@ -321,16 +316,54 @@ public class PuzzleManager : MonoBehaviour
 				enableStartTiles ();
 		}
 		
+		
+		//AQUI
 		void backNormal ()
 		{
-				// Last tile selection step.
-				Debug.Log ("Tile selection");
+				//If we found a dead end
+				if (isBlocked) {
+		
+						moves.RemoveAt (moves.Count - 1);
+		
+						object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+						foreach (object o in obj) {
+								TilePrefabScript tilePrefab = (TilePrefabScript)o;
+			
+								Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
+			
+								if (tilePrefab.getState () == Enums.TilePrefabState.Used && prefabCoord.equals (targetCoord)) {
+							
+										tilePrefab.moveBack ();
+										tilePrefab.transform.Translate (new Vector3 (0, 0, 5), Space.World);
+										tilePrefab.state = Enums.TilePrefabState.Blocked;
+										tilePrefab.setAlpha ();
+										
+								} 
+						}
+						isBlocked = false;
+				
+						//If we just want to go back.
+				} else {
+				
+				
+				
+				}
+				
+				disableHand ();
+		
+				
+				if (moves.Count == 0) {
+				
+						enableFirstHand ();
+						
+				} else {
+						enableHand ();
+				}
+				
+			
+				
 		}
 	
-		void back3 ()
-		{
-				Debug.Log ("Restart!");
-		}
 		
 		//First turn logic.
 	
