@@ -28,7 +28,7 @@ public class TileScript
 	
 					
 				this.type = type;
-				this.name = type + " tile";
+				this.name = coordinate.getX () + " - " + coordinate.getY ();
 	
 				this.coordinates = coordinate;
 				this.exit1 = 0;

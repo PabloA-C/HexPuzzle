@@ -11,9 +11,10 @@ public class PuzzleManager : MonoBehaviour
 		private int difficulty;
 		public List<Coordinate> startTilesCoordinates;
 		public List<TileScript> moves;
-		private Coordinate targetCoord;
-		private int targetEntr;
-		private Vector3 targetPos;
+		private List<Coordinate> targetCoord;
+		private List<int> targetEntr;
+		private List<Vector3> targetPos;
+	
 		private bool isBlocked = false;
 			
 	
@@ -54,6 +55,8 @@ public class PuzzleManager : MonoBehaviour
 				
 				}
 		
+		
+		
 				// Generating the random map with a given difficulty.
 				mapCreator = new MapCreator (difficulty);
 	
@@ -71,7 +74,10 @@ public class PuzzleManager : MonoBehaviour
 	
 				// Setting up the moves storing.
 				moves = new System.Collections.Generic.List<TileScript> ();
-			
+				targetCoord = new System.Collections.Generic.List<Coordinate> ();
+				targetEntr = new System.Collections.Generic.List<int> ();
+				targetPos = new System.Collections.Generic.List<Vector3> ();
+		
 				// Starting the game.
 				startGame ();
 	
@@ -91,7 +97,7 @@ public class PuzzleManager : MonoBehaviour
 				//	Moving the selected tile into position
 				placeTile ();
 				//	Finding the next target
-				Coordinate result = findNextTarget (targetCoord, moves [moves.Count - 1].getFreeExit ());	
+				Coordinate result = findNextTarget (targetCoord [targetCoord.Count - 1], moves [moves.Count - 1].getFreeExit ());	
 				
 				
 				if (result.getX () == -2) {
@@ -124,11 +130,11 @@ public class PuzzleManager : MonoBehaviour
 								
 								tilePrefab.setOriginalPos (tilePrefab.transform.position);
 								
-								Vector3 newPos = targetPos;
-								newPos.Set (targetPos.x, targetPos.y, tilePrefab.originalPosition.z);
+								Vector3 newPos = targetPos [targetPos.Count - 1];
+								newPos.Set (targetPos [targetPos.Count - 1].x, targetPos [targetPos.Count - 1].y, tilePrefab.originalPosition.z);
 								tilePrefab.transform.position = newPos;
-								tilePrefab.transform.Translate (new Vector3 (0, 0, -5), Space.World);
-								prefabScript.setCoordinates (targetCoord);
+								tilePrefab.transform.Translate (new Vector3 (0, 0, -4), Space.World);
+								prefabScript.setCoordinates (targetCoord [targetCoord.Count - 1]);
 								tilePrefab.setState (Enums.TilePrefabState.Used);
 								moves.Add (prefabScript);
 				
@@ -159,10 +165,10 @@ public class PuzzleManager : MonoBehaviour
 						if (prefabCoord.equals (destCoord)) {
 				
 								if (tilePrefab.getState () == Enums.TilePrefabState.Normal) {
-										targetCoord = prefabCoord;
-										targetPos = tilePrefab.transform.position;
-										targetEntr = getEntry (prevExit);
-										res = targetCoord;						
+										targetCoord.Add (prefabCoord);
+										targetPos.Add (tilePrefab.transform.position);
+										targetEntr.Add (getEntry (prevExit));
+										res = targetCoord [targetEntr.Count - 1];						
 										tilePrefab.setState (Enums.TilePrefabState.Target);
 					
 								} else if (tilePrefab.getState () == Enums.TilePrefabState.Fixed) {
@@ -214,13 +220,12 @@ public class PuzzleManager : MonoBehaviour
 						TileScript prefabScript = tilePrefab.getTileScript ();
 			
 						if (tilePrefab.getState () == Enums.TilePrefabState.Blocked) {
-								Debug.Log ("Checking one");
 								bool isValid = false;
-								if (prefabScript.getExits () [0] == targetEntr) {
+								if (prefabScript.getExits () [0] == targetEntr [targetEntr.Count - 1]) {
 										isValid = true;
 										prefabScript.setFreeExit (2);
 							
-								} else if (prefabScript.getExits () [1] == targetEntr) {
+								} else if (prefabScript.getExits () [1] == targetEntr [targetEntr.Count - 1]) {
 										isValid = true;
 										prefabScript.setFreeExit (1);
 								}
@@ -294,13 +299,42 @@ public class PuzzleManager : MonoBehaviour
 						backToStart ();
 						
 				} else {
-						backNormal ();
-				}
+				
+				
+						if (!isBlocked) {
+						
+				
+								object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+								foreach (object o in obj) {
+										TilePrefabScript tilePrefab = (TilePrefabScript)o;
+					
+										Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
+					
+										if (tilePrefab.getState () == Enums.TilePrefabState.Target && prefabCoord.equals (targetCoord [targetCoord.Count - 1])) {
+						
+												tilePrefab.state = Enums.TilePrefabState.Normal;
+												tilePrefab.setGrass ();
+										} 
+								}
+								
+								targetCoord.RemoveAt (targetCoord.Count - 1);
+								targetEntr.RemoveAt (targetEntr.Count - 1);
+								targetPos.RemoveAt (targetPos.Count - 1);
+								
+								
+								
+								
+								
+						} 
+						
+						back ();
+						
+				
+				} 
 		}
 		
 		void backToStart ()
-		{
-				
+		{	
 				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
 				foreach (object o in obj) {
 						TilePrefabScript tilePrefab = (TilePrefabScript)o;
@@ -317,41 +351,36 @@ public class PuzzleManager : MonoBehaviour
 		}
 		
 		
+		
 		//AQUI
-		void backNormal ()
+		void back ()
 		{
-				//If we found a dead end
-				if (isBlocked) {
 		
-						moves.RemoveAt (moves.Count - 1);
-		
-						object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
-						foreach (object o in obj) {
-								TilePrefabScript tilePrefab = (TilePrefabScript)o;
+				moves.RemoveAt (moves.Count - 1);
+				object[] obj = GameObject.FindObjectsOfType (typeof(TilePrefabScript));
+				foreach (object o in obj) {
+						TilePrefabScript tilePrefab = (TilePrefabScript)o;
 			
-								Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
+						Coordinate prefabCoord = tilePrefab.getTileScript ().getCoordinates ();
 			
-								if (tilePrefab.getState () == Enums.TilePrefabState.Used && prefabCoord.equals (targetCoord)) {
+						if (tilePrefab.getState () == Enums.TilePrefabState.Used && prefabCoord.equals (targetCoord [targetCoord.Count - 1])) {
 							
-										tilePrefab.moveBack ();
-										tilePrefab.transform.Translate (new Vector3 (0, 0, 5), Space.World);
-										tilePrefab.state = Enums.TilePrefabState.Blocked;
-										tilePrefab.setAlpha ();
+								tilePrefab.moveBack ();
+								tilePrefab.transform.Translate (new Vector3 (0, 0, 5), Space.World);
+								tilePrefab.state = Enums.TilePrefabState.Blocked;
+								tilePrefab.setAlpha ();
 										
-								} 
-						}
-						isBlocked = false;
-				
-						//If we just want to go back.
-				} else {
-				
-				
-				
+						} 
 				}
 				
+				
+				
+				
+				isBlocked = false;
+
 				disableHand ();
 		
-				
+		
 				if (moves.Count == 0) {
 				
 						enableFirstHand ();
@@ -359,8 +388,6 @@ public class PuzzleManager : MonoBehaviour
 				} else {
 						enableHand ();
 				}
-				
-			
 				
 		}
 	
@@ -446,12 +473,13 @@ public class PuzzleManager : MonoBehaviour
 			
 						if (tilePrefab.getState () == Enums.TilePrefabState.Available) {
 								if (targetCoordinate.equals (prefabCoord)) {
-										targetCoord = prefabCoord;
-										targetPos = tilePrefab.transform.position;	
+										targetCoord.Add (prefabCoord);
+										targetPos.Add (tilePrefab.transform.position);
 										tilePrefab.hover (false);							
 										tilePrefab.setState (Enums.TilePrefabState.Target);
 										GameObject.Find ("Back").GetComponent<BackScript> ().setState (Enums.SelectorState.Free);
 
+										
 								} else {
 										tilePrefab.setState (Enums.TilePrefabState.Normal);
 								}
@@ -477,8 +505,8 @@ public class PuzzleManager : MonoBehaviour
 						if (tilePrefab.getState () == Enums.TilePrefabState.Blocked) {
 						
 						
-								Coordinate dest1 = mapCreator.getCoordinateFromExit (targetCoord, prefabScript.getExits () [0]);
-								Coordinate dest2 = mapCreator.getCoordinateFromExit (targetCoord, prefabScript.getExits () [1]);
+								Coordinate dest1 = mapCreator.getCoordinateFromExit (targetCoord [targetCoord.Count - 1], prefabScript.getExits () [0]);
+								Coordinate dest2 = mapCreator.getCoordinateFromExit (targetCoord [targetCoord.Count - 1], prefabScript.getExits () [1]);
 				
 								bool isValid = false;
 								if (startTileCoordinate.equals (dest1)) {						
@@ -489,7 +517,7 @@ public class PuzzleManager : MonoBehaviour
 										tilePrefab.getTileScript ().setFreeExit (1);
 								}
 								if (isValid) {
-										tilePrefab.getTileScript ().setCoordinates (targetCoord);
+										tilePrefab.getTileScript ().setCoordinates (targetCoord [targetCoord.Count - 1]);
 										tilePrefab.setState (Enums.TilePrefabState.Ready);
 								}
 						}

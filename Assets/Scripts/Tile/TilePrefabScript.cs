@@ -248,6 +248,11 @@ public class TilePrefabScript : MonoBehaviour
 		
 		}
 
+		public void setGrass ()
+		{
+				GetComponent<SpriteRenderer> ().sprite = TileSprites [getTypeIndex ("Grass")];
+		}
+
 		public Enums.TilePrefabState getState ()
 		{
 				return state;
