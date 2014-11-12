@@ -199,6 +199,7 @@ public class TilePrefabScript : MonoBehaviour
 				HLSprites = Resources.LoadAll<Sprite> (@"Sprites/HighLights");
 
 				GetComponent<SpriteRenderer> ().sprite = TileSprites [getTypeIndex (tile.getType ())];
+				GetComponent<SpriteRenderer> ().sortingOrder = 2;
 				transform.Rotate (0, 0, tile.getRotation () * 60, Space.World);
 				setAlpha ();
 		
@@ -214,7 +215,7 @@ public class TilePrefabScript : MonoBehaviour
 				
 				TileSprites = Resources.LoadAll<Sprite> (@"Sprites/TileSheet");
 				HLSprites = Resources.LoadAll<Sprite> (@"Sprites/HighLights");
-				
+				GetComponent<SpriteRenderer> ().sortingOrder = 1;
 				GetComponent<SpriteRenderer> ().sprite = TileSprites [getTypeIndex (tile.getType ())];
 				transform.Rotate (0, 0, tile.getRotation () * 60, Space.World);
 		

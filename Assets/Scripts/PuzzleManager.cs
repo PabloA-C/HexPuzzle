@@ -261,6 +261,8 @@ public class PuzzleManager : MonoBehaviour
 		
 		void checkVictory ()
 		{
+				isBlocked = true;
+		
 				bool res = false;
 				
 				int handSize = 0;
@@ -295,7 +297,8 @@ public class PuzzleManager : MonoBehaviour
 		{
 		
 				if (moves.Count == 0) {
-				
+						GameObject.Find ("Back").GetComponent<BackScript> ().setState (Enums.SelectorState.Blocked);
+						GameObject.Find ("Back").GetComponent<Transform> ().Translate (new Vector3 (0, 0, 4));
 						backToStart ();
 						
 				} else {
