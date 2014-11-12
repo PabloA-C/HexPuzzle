@@ -21,7 +21,7 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Ready) {	
 						// This coordinates are used to identify the tile on the puzzle manager, nothing else.
 						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playPlacement ();
-						hover (false);
+						// hover (false);
 						tileScript.setCoordinates (new Coordinate (-1, -1));
 						puzzleManager.turn ();
 				}
@@ -47,7 +47,7 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Ready) {	
 						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playSelection ();
 						//Board.placeTile(This)
-						hover (true);
+						//hover (true);
 
 			
 				}
@@ -56,7 +56,7 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Available) {	
 						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playSelection ();
 						//Board.setTarget(this coords)
-						hover (true);
+						//hover (true);
 			
 				}
 		
@@ -69,7 +69,7 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Ready) {	
 			
 						//Board.placeTile(This)
-						hover (false);
+						//	hover (false);
 			
 			
 				}
@@ -77,7 +77,7 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Available) {	
 			
 						//Board.setTarget(this coords)
-						hover (false);
+						//	hover (false);
 				
 				}
 		}

@@ -37,16 +37,23 @@ public class PuzzleManager : MonoBehaviour
 				switch (difficulty) {
 				case 1:
 				
+				 //ANDROID
+						GameObject.Find ("Main Camera").GetComponent<Camera> ().orthographicSize = 4.7F;
+						GameObject.Find ("Hand Camera").GetComponent<Camera> ().orthographicSize = 4.7F;
 						GameObject.Find ("Selector").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
 						GameObject.Find ("Quit").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
 						GameObject.Find ("Back").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
 						break;
 				case 2:
+						GameObject.Find ("Main Camera").GetComponent<Camera> ().orthographicSize = 5.4F;
+						GameObject.Find ("Hand Camera").GetComponent<Camera> ().orthographicSize = 5.4F;
 						GameObject.Find ("Selector").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
 						GameObject.Find ("Quit").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
 						GameObject.Find ("Back").GetComponent<Transform> ().Translate (new Vector3 (0, 4f, 0), Space.World);
 						break;
 				case 3:
+						GameObject.Find ("Main Camera").GetComponent<Camera> ().orthographicSize = 5.4F;
+						GameObject.Find ("Hand Camera").GetComponent<Camera> ().orthographicSize = 5.4F;
 						GameObject.Find ("Selector").GetComponent<Transform> ().Translate (new Vector3 (0, 4.8F, 0), Space.World);
 						GameObject.Find ("Quit").GetComponent<Transform> ().Translate (new Vector3 (0, 4.8f, 0), Space.World);
 						GameObject.Find ("Back").GetComponent<Transform> ().Translate (new Vector3 (0, 4.8f, 0), Space.World);
