@@ -22,6 +22,9 @@ public class PuzzleManager : MonoBehaviour
 // Use this for initialization
 		void Start ()
 		{
+		
+		
+				
 				difficulty = GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().getDifficulty ();
 			
 				GameObject.Find ("NormalButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Blocked);
@@ -288,10 +291,13 @@ public class PuzzleManager : MonoBehaviour
 				}
 		
 				if (moves.Count == handSize) {
+			
+						Instantiate (Resources.Load ("Prefabs/YouWin"));
 						GameObject.Find ("NormalButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Free);
 						GameObject.Find ("HardButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Free);
 						GameObject.Find ("ExpertButton").GetComponent<DifficultyButtonScript> ().setState (Enums.SelectorState.Free);
 						GameObject.Find ("Back").GetComponent<BackScript> ().setState (Enums.SelectorState.Blocked);
+						
 						
 				} else {
 						disableHand ();
@@ -300,16 +306,17 @@ public class PuzzleManager : MonoBehaviour
 		}
 		
 		
+		
+		
 		public void backStep ()
 		{
 		
 				if (moves.Count == 0) {
 						GameObject.Find ("Back").GetComponent<BackScript> ().setState (Enums.SelectorState.Blocked);
-						GameObject.Find ("Back").GetComponent<Transform> ().Translate (new Vector3 (0, 0, 4));
+					
 						backToStart ();
 						
 				} else {
-				
 				
 						if (!isBlocked) {
 						

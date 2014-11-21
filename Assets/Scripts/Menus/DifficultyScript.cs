@@ -14,6 +14,7 @@ public class DifficultyScript : MonoBehaviour
 		void Start ()
 		{
 				DontDestroyOnLoad (this);
+				Screen.fullScreen = false;
 				select1 = Resources.Load ("Sounds/select1")as AudioClip;
 				select2 = Resources.Load ("Sounds/select2")as AudioClip;
 				click1 = Resources.Load ("Sounds/click1")as AudioClip;

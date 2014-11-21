@@ -21,7 +21,7 @@ public class TilePrefabScript : MonoBehaviour
 				if (state == Enums.TilePrefabState.Ready) {	
 						// This coordinates are used to identify the tile on the puzzle manager, nothing else.
 						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playPlacement ();
-						// hover (false);
+						//	hover (false);
 						tileScript.setCoordinates (new Coordinate (-1, -1));
 						puzzleManager.turn ();
 				}
@@ -46,8 +46,8 @@ public class TilePrefabScript : MonoBehaviour
 				//On the hand
 				if (state == Enums.TilePrefabState.Ready) {	
 						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playSelection ();
-						//Board.placeTile(This)
-						//hover (true);
+					
+						//	hover (true);
 
 			
 				}
@@ -55,8 +55,8 @@ public class TilePrefabScript : MonoBehaviour
 				//On the board
 				if (state == Enums.TilePrefabState.Available) {	
 						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playSelection ();
-						//Board.setTarget(this coords)
-						//hover (true);
+						
+						hover (true);
 			
 				}
 		
@@ -87,13 +87,12 @@ public class TilePrefabScript : MonoBehaviour
 				// Changing the Z coord of the tile
 				
 				if (newState == Enums.TilePrefabState.Ready) {
-						transform.Translate (new Vector3 (0, 0, -5), Space.World);
+						GetComponent<SpriteRenderer> ().sortingOrder = 3;
 			
 				}
 
 				if (newState == Enums.TilePrefabState.Blocked) {
-						transform.Translate (new Vector3 (0, 0, 5), Space.World);
-			
+						GetComponent<SpriteRenderer> ().sortingOrder = 0;
 				}
 
 
@@ -194,10 +193,9 @@ public class TilePrefabScript : MonoBehaviour
 				this.tileScript = tile;
 				this.handPosition = handPosition;
 				this.puzzleManager = GameObject.Find ("Puzzle").GetComponent<PuzzleManager> ();
-		
+	
 				TileSprites = Resources.LoadAll<Sprite> (@"Sprites/TileSheet");
 				HLSprites = Resources.LoadAll<Sprite> (@"Sprites/HighLights");
-
 				GetComponent<SpriteRenderer> ().sprite = TileSprites [getTypeIndex (tile.getType ())];
 				GetComponent<SpriteRenderer> ().sortingOrder = 2;
 				transform.Rotate (0, 0, tile.getRotation () * 60, Space.World);

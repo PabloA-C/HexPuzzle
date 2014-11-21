@@ -54,12 +54,12 @@
      <Compile Include="Assets\Scripts\Menus\HelpScript.cs" />
      <Compile Include="Assets\Scripts\Menus\NextScript.cs" />
      <Compile Include="Assets\Scripts\Menus\QuitScript.cs" />
+     <Compile Include="Assets\Scripts\Menus\YouWinScript.cs" />
      <Compile Include="Assets\Scripts\Puzzle\AuxMethods.cs" />
      <Compile Include="Assets\Scripts\Puzzle\BoardManager.cs" />
      <Compile Include="Assets\Scripts\Puzzle\Coordinate.cs" />
      <Compile Include="Assets\Scripts\Puzzle\MapCreator.cs" />
      <Compile Include="Assets\Scripts\PuzzleManager.cs" />
-     <Compile Include="Assets\Scripts\Test\Test.cs" />
      <Compile Include="Assets\Scripts\Tile\TilePrefabScript.cs" />
      <Compile Include="Assets\Scripts\Tile\TileScript.cs" />
   </ItemGroup>

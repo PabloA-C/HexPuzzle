@@ -5,22 +5,31 @@ public class BackScript : MonoBehaviour
 {
 
 		private Enums.SelectorState state;
+		bool selected = false;
 	
 		void OnMouseDown ()
 		{
 				if (state == Enums.SelectorState.Free) {
 						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playPlacement ();
 						GameObject.Find ("Puzzle").GetComponent<PuzzleManager> ().backStep ();
-						
 				}
 		
+		}
+	
+		void OnMouseOver ()
+		{
+				if (state == Enums.SelectorState.Free) {
+						if (!selected) {
+								hover (true);
+						}
+				}
 		}
 	
 		void OnMouseEnter ()
 		{
 				if (state == Enums.SelectorState.Free) {
 						GameObject.Find ("Difficulty").GetComponent<DifficultyScript> ().playSelection ();
-						hover (true);
+						
 				}
 		}
 	
@@ -28,6 +37,7 @@ public class BackScript : MonoBehaviour
 		{
 				if (state == Enums.SelectorState.Free) {
 						hover (false);
+						selected = false;
 				}
 		
 		}
@@ -40,6 +50,8 @@ public class BackScript : MonoBehaviour
 						Color color = GetComponent<SpriteRenderer> ().color;
 						color.a = 1;
 						renderer.material.color = color;
+						hover (false);
+						
 				} 
 		
 				if (newState == Enums.SelectorState.Blocked) {
@@ -48,10 +60,11 @@ public class BackScript : MonoBehaviour
 						Color color = GetComponent<SpriteRenderer> ().color;
 						color.a = 0;
 						renderer.material.color = color;
+						hover (false);
 			
 				}
 				state = newState;
-		
+				setAlpha ();
 		}
 	
 		public void hover (bool mouseEntered)
@@ -66,16 +79,33 @@ public class BackScript : MonoBehaviour
 				bigScale.y = 1.2F; 
 		
 				if (mouseEntered) {
-						transform.Translate (new Vector3 (0, 0, -4), Space.World);
+						
 						transform.localScale = bigScale;
 			
 				} else {
-						transform.Translate (new Vector3 (0, 0, 4), Space.World);
 						transform.localScale = originalScale;
 			
 				}
 		
 		
 		
+		}
+		
+		public void setAlpha ()
+		{
+		
+				float a = 1f;
+						
+		
+				if (state == Enums.SelectorState.Blocked) {
+			
+						a = 0.5f;
+			
+				
+				}
+		
+				Color color = GetComponent<SpriteRenderer> ().color;
+				color.a = a;
+				renderer.material.color = color;
 		}
 }
